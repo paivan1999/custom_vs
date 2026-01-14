@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Vega full page</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    #vis {
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="vis"></div>
+
+  <script>
+    const spec = {
+      "$schema": "https://vega.github.io/schema/vega/v6.json",
+
+      "autosize": { "type": "fit", "contains": "padding", "resize": true },
+
+      "padding": 10,
+
+      /* ❌ width / height УБРАТЬ */
+
+      "data": [
+        {
+          "name": "table",
+          "values": [
+            { "x": 1, "y": 2 },
+            { "x": 2, "y": 5 },
+            { "x": 3, "y": 3 }
+          ]
+        }
+      ],
+
+      "scales": [
+        {
+          "name": "x",
+          "type": "linear",
+          "domain": {"data": "table", "field": "x"},
+          "range": "width"
+        },
+        {
+          "name": "y",
+          "type": "linear",
+          "domain": {"data": "table", "field": "y"},
+          "range": "height"
+        }
+      ],
+
+      "axes": [
+        { "scale": "x", "orient": "bottom" },
+        { "scale": "y", "orient": "left" }
+      ],
+
+      "marks": [
+        {
+          "type": "symbol",
+          "from": {"data": "table"},
+          "encode": {
+            "enter": {
+              "x": {"scale": "x", "field": "x"},
+              "y": {"scale": "y", "field": "y"},
+              "size": {"value": 100}
+            }
+          }
+        }
+      ]
+    };
+
+    vegaEmbed("#vis", spec, {
+      renderer: "svg",
+      actions: false,
+      resize: true   // 🔑 важно
+    });
+  </script>
+</body>
+</html>
