@@ -1,5 +1,5 @@
-<!doctype html>
-<html>
+<!DOCTYPE html> 
+<html> 
 <head>
   <meta charset="utf-8" />
   <title>Vega full page</title>
@@ -11,14 +11,14 @@
   <style>
     html, body {
       margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
+      padding: 0.25%;
+      width: 98%;
+      height: 98%;
     }
 
-    #vis {
-      width: 100vw;
-      height: 100vh;
+    %23vis {
+      width: 98vw;
+      height: 98vh;
     }
   </style>
 </head>
@@ -28,65 +28,3819 @@
 
   <script>
     const spec = {
-      "$schema": "https://vega.github.io/schema/vega/v6.json",
-
-      "autosize": { "type": "fit", "contains": "padding", "resize": true },
-
-      "padding": 10,
-
-      /* ❌ width / height УБРАТЬ */
-
-      "data": [
+  "$schema": "https://vega.github.io/schema/vega/v6.json",
+  "description": "A scatter plot matrix of penguin data with interactive linked selections.",
+  "autosize": "fit",
+  "padding": 0,
+  
+  "config": {
+    "axis": {
+      "tickColor": "%23ccc",
+      "tickRound": true
+    }
+  },
+  "signals": [
+    {
+      "name": "singleQuote",
+      "value": "'"
+    },
+    {
+      "name": "deltaCanvasSavior",
+      "update": "[1, 1]"
+    },
+    {
+      "name": "cell'",
+      "update": "cell.cell"
+    },
+    {
+      "name": "brushX'",
+      "update": "cell.brushX"
+    },
+    {
+      "name": "brushY'",
+      "update": "cell.brushY"
+    },
+    {
+      "name": "curX'",
+      "update": "cell.curX"
+    },
+    {
+      "name": "curY'",
+      "update": "cell.curY"
+    },
+    {
+      "name": "lastDragX'",
+      "update": "cell.lastDragX"
+    },
+    {
+      "name": "lastDragY'",
+      "update": "cell.lastDragY"
+    },
+    {
+      "name": "pointerover'",
+      "update": "cell.pointerover"
+    },
+    {
+      "name": "pointerdown'",
+      "update": "cell.pointerdown"
+    },
+    {
+      "name": "dblclick'",
+      "update": "cell.dblclick"
+    },
+    {
+      "name": "moveAfterDown'",
+      "update": "cell.moveAfterDown"
+    },
+    {
+      "name": "downPoint'",
+      "update": "cell.downPoint"
+    },
+    {
+      "name": "hoverCell'",
+      "update": "cell.hoverCell"
+    },
+    {
+      "name": "insideCell'",
+      "update": "cell.insideCell"
+    },
+    {
+      "name": "anchorBrushX'",
+      "update": "cell.anchorBrushX"
+    },
+    {
+      "name": "anchorBrushY'",
+      "update": "cell.anchorBrushY"
+    },
+    {
+      "name": "anchorCurX'",
+      "update": "cell.anchorCurX"
+    },
+    {
+      "name": "anchorCurY'",
+      "update": "cell.anchorCurY"
+    },
+    {
+      "name": "XYMode'",
+      "update": "cell.XYMode"
+    },
+    {
+      "name": "XMode'",
+      "update": "cell.XMode"
+    },
+    {
+      "name": "YMode'",
+      "update": "cell.YMode"
+    },
+    {
+      "name": "ZMode'",
+      "update": "cell.ZMode"
+    },
+    {
+      "name": "downPointPixel'",
+      "update": "cell.downPointPixel"
+    },
+    {
+      "name": "isWheeling'",
+      "update": "cell.isWheeling"
+    },
+    {
+      "name": "wheelStart'",
+      "update": "cell.wheelStart"
+    },
+    {
+      "name": "idHover'",
+      "update": "cell.idHover"
+    },
+    {
+      "name": "zoom'",
+      "update": "cell.zoom"
+    },
+    {
+      "name": "idActive'",
+      "update": "cell.idActive"
+    },
+    {
+      "name": "isStartX'",
+      "update": "cell.isStartX"
+    },
+    {
+      "name": "isStartY'",
+      "update": "cell.isStartY"
+    },
+    {
+      "name": "isStartZ'",
+      "update": "cell.isStartZ"
+    },
+    {
+      "name": "idInteractive'",
+      "update": "cell.idInteractive"
+    },
+    {
+      "name": "interactiveCell'",
+      "update": "cell.interactiveCell"
+    },
+    {
+      "name": "time'",
+      "update": "cell.time"
+    },
+    {
+      "name": "interpolateTime'",
+      "update": "cell.interpolateTime"
+    },
+    {"name": "maxResolution", "update": "6.5"},
+    {
+      "name": "width",
+      "init": "containerSize()[0]",
+      "on": [
         {
-          "name": "table",
-          "values": [
-            { "x": 1, "y": 2 },
-            { "x": 2, "y": 5 },
-            { "x": 3, "y": 3 }
-          ]
+          "events": "timer",
+          "update": "containerSize()[0]"
         }
-      ],
-
-      "scales": [
+      ]
+    },
+    {
+      "name": "height",
+      "init": "containerSize()[1]",
+      "on": [
         {
-          "name": "x",
-          "type": "linear",
-          "domain": {"data": "table", "field": "x"},
-          "range": "width"
+          "events": "timer",
+          "update": "containerSize()[1]"
+        }
+      ]
+    },
+    { "name": "W", "update": "width - legendW" },
+    { "name": "H", "update": "height" },
+    { "name": "BetweenPadX", "update": "32"},
+    { "name": "BetweenPadY", "update": "32"},
+    {
+      "name": "legendW",
+      "update": "70"
+    },
+    {
+      "name": "legendH",
+      "update": "H * 0.7"
+    },
+    {
+      "name": "otherH",
+      "update": "H * 0.3"
+    },
+    {
+      "name": "minXYSize",
+      "value": [50, 50]
+    },
+    {
+      "name": "tickSize",
+      "value": 6
+    },
+    {
+      "name": "XTS",
+      "value": 13
+    },
+    {
+      "name": "YTS",
+      "value": 5
+    },
+    {
+      "name": "xg",
+      "on": [
+        {
+          "events": "window:pointermove",
+          "update": "max(x() - deltaCanvasSavior[0], 0)"
+        }
+      ]
+    },
+    {
+      "name": "yg",
+      "on": [
+        {
+          "events": "window:pointermove",
+          "update": "max(y() - deltaCanvasSavior[1], 0)"
+        }
+      ]
+    },
+    {
+      "name": "initialPlotSpaceX",
+      "update": "(W - BetweenPadX * 2 - XTS)/W"
+    },
+    {
+      "name": "initialPlotSpaceY",
+      "update": "(H - BetweenPadY * 2 - YTS)/H"
+    },
+    {
+      "name": "n",
+      "value": 3
+    },
+    {
+      "name": "a",
+      "update": "pow(2, n - 1)"
+    },
+    {
+      "name": "alpha",
+      "update": "0.5"
+    },
+    {
+      "name": "b",
+      "update": "(1 - a / pow(2, n - 1)) * pow(2, alpha)"
+    },
+    {
+      "name": "sizes",
+      "init": "{XPad: [BetweenPadX+XTS, BetweenPadX], YPad: [BetweenPadY+YTS, BetweenPadY], XSizeAlpha: [8/21 * initialPlotSpaceX, 13/21 * initialPlotSpaceX], YSizeAlpha: [8/21 * initialPlotSpaceY, 13/21 * initialPlotSpaceY], XSizeBeta: 8/13, YSizeBeta: 8/13, XSizeAlphaAnchor: null, YSizeAlphaAnchor: null, XSizeBetaAnchor: null, YSizeBetaAnchor: null, downPoint: null, state: 'XYZ', action: null, pointerDownOver: null, pointerover: null, grabbing: false, isZooming1: false, isZooming2: false, isZoomingTitled: false, time: null, interpolateTime: null, pointeroverArea: null}",
+      "on": [
+        {
+          "events": "window:pointermove",
+          "update": "merge(sizes, {interpolateTime: (event.movementX !== 0 || event.movementY !== 0) ? null : sizes.interpolateTime, pointerover: xg > sizes.XPad[0] + sizes.XSizeAlpha[0] * W + sizes.XPad[1] - buttonSize + 2 && xg < sizes.XPad[0] + sizes.XSizeAlpha[0] * W + sizes.XPad[1] - 2 ? (yg > sizes.YSizeAlpha[1] * H + 2 && yg < sizes.YSizeAlpha[1] * H + buttonSize - 2 ? (sizes.state === 'XYZ' ? 'cXY' : null) : (yg > sizes.YSizeAlpha[1] * H + sizes.YSizeAlpha[0] * H + sizes.YPad[1] + 2 && yg < H ? (sizes.state === 'XYZ' ? 'cX' : (sizes.state === 'XZ' ? 'cXY' : null)) : null)) : (xg > sizes.XPad[0] - buttonSize + 2 && xg < sizes.XPad[0] - 2 ? (yg > sizes.YSizeAlpha[1] * H + 2 && yg < sizes.YSizeAlpha[1] * H + buttonSize - 2 ? (sizes.state === 'XYZ' ? 'cY' : (sizes.state === 'YZ' ? 'cXY' : null)) : (yg > sizes.YSizeAlpha[1] * H + sizes.YSizeAlpha[0] * H + sizes.YPad[1] + 2 && yg < H ? (sizes.state === 'XYZ' ? 'cZ' : (sizes.state === 'XZ' ? 'cY' : (sizes.state === 'YZ' ? 'cX' : 'cXY'))) : null)) : null)})"
         },
         {
-          "name": "y",
-          "type": "linear",
-          "domain": {"data": "table", "field": "y"},
-          "range": "height"
+          "events": "window:pointermove",
+          "update": "merge(sizes, {pointeroverArea: xg > sizes.XPad[0] + sizes.XSizeAlpha[0] * W + sizes.XPad[1] - buttonSize + 2 && xg < sizes.XPad[0] + sizes.XSizeAlpha[0] * W + sizes.XPad[1] - 2 && (yg > sizes.YSizeAlpha[1] * H + sizes.YSizeAlpha[0] * H + sizes.YPad[1] + 2 && yg < H) || (xg > sizes.XPad[0] - buttonSize + 2 && xg < sizes.XPad[0] - 2 && (yg > sizes.YSizeAlpha[1] * H + 2 && yg < sizes.YSizeAlpha[1] * H + buttonSize - 2 || yg > sizes.YSizeAlpha[1] * H + sizes.YSizeAlpha[0] * H + sizes.YPad[1] + 2 && yg < H))})"
+        },
+        {
+          "events": {"signal": "W"},
+          "update": "merge(sizes, W > 0 ? {XSizeAlpha: [sizes.XSizeAlpha[0]/(sizes.XSizeAlpha[0] + sizes.XSizeAlpha[1]) * (W - sizes.XPad[0] - sizes.XPad[1])/W, sizes.XSizeAlpha[1]/(sizes.XSizeAlpha[0] + sizes.XSizeAlpha[1]) * (W - sizes.XPad[0] - sizes.XPad[1])/W]} : {})"
+        },
+        {
+          "events": {"signal": "H"},
+          "update": "merge(sizes, H > 0 ? {YSizeAlpha: [sizes.YSizeAlpha[0]/(sizes.YSizeAlpha[0] + sizes.YSizeAlpha[1]) * (H - sizes.YPad[0] - sizes.YPad[1])/H, sizes.YSizeAlpha[1]/(sizes.YSizeAlpha[0] + sizes.YSizeAlpha[1]) * (H - sizes.YPad[0] - sizes.YPad[1])/H]} : {})"
+        },
+        {
+          "events": "timer", 
+          "update": "merge(sizes, {time: now(), interpolateTime: sizes.interpolateTime && now() >= sizes.interpolateTime[1] ? null : sizes.interpolateTime})"
+        },
+        {
+          "events": "wheel!",
+          "update": "merge(sizes, ( (sizes.state === 'XYZ' || sizes.state === 'YZ') && ((yg/H > 0 && yg/H < sizes.YSizeAlpha[1]) || (yg > (sizes.YSizeAlpha[1] * H+sizes.YPad[1]) && yg < (sizes.YSizeAlpha[1] * H + sizes.YPad[1]+sizes.YSizeAlpha[0] * H))) || (sizes.state === 'XZ' || sizes.state === 'Z') && (yg > 0 && yg < H - sizes.YPad[1]) ) ? ( {isZooming1: (sizes.state === 'XYZ' || sizes.state === 'XZ') && (xg > 0 && xg < sizes.XPad[0]), isZooming2: ((sizes.state === 'XYZ' || sizes.state === 'XZ') && (xg > (sizes.XPad[0]+sizes.XSizeAlpha[0] * W) && xg < (sizes.XPad[0]+sizes.XSizeAlpha[0] * W+sizes.XPad[1])) || (sizes.state === 'YZ' || sizes.state === 'Z') && (xg > 0 && xg < sizes.XPad[1]))} ) : {})"
+        },
+        {
+          "events": "wheel!",
+          "update": "merge(sizes, {isZoomingTitled: sizes.isZooming1 || sizes.isZooming2 && (sizes.state === 'YZ' || sizes.state === 'Z'), interpolateTime: null})"
+        },
+        {
+          "events": "wheel!",
+          "update": "merge(sizes, sizes.isZooming1 || sizes.isZooming2 ? {zoom: clamp(-event.deltaY * pow(16, event.deltaMode), buttonSize - (sizes.isZooming1 ? sizes.XPad[0] : sizes.XPad[1]), min(max(BetweenPadX + (sizes.isZoomingTitled ? XTS : 0), -10 + (sizes.isZoomingTitled ? XTS : 0) + (sizes.isZooming1 ? (sizes.state === 'XYZ' ? max(YD_y_text_size_glob, Y_y_text_size_glob) : YD_y_text_size_glob) : (sizes.state === 'YZ' ? max(YZ_y_text_size_glob, Y_y_text_size_glob) : YZ_y_text_size_glob))) - (sizes.isZooming1 ? sizes.XPad[0] : sizes.XPad[1]), sizes.state === 'XZ' || sizes.state === 'XYZ' ? (W * sizes.XSizeAlpha[0] - minXYSize[0]) * (1 + sizes.XSizeBeta) : 1000000))} : {zoom: null})"
+        },
+        {
+          "events": "wheel!",
+          "update": "merge(sizes, ((sizes.state === 'XYZ' || sizes.state === 'YZ') && ((yg/H > 0 && yg/H < sizes.YSizeAlpha[1]) || (yg > (sizes.YSizeAlpha[1] * H + sizes.YPad[1]) && yg < (sizes.YSizeAlpha[1] * H + sizes.YPad[1]+sizes.YSizeAlpha[0] * H))) || (sizes.state === 'XZ' || sizes.state === 'Z') && (yg > 0 && yg < H - sizes.YPad[1])) ? {XPad:  ((sizes.state === 'XYZ' || sizes.state === 'XZ') && (xg > 0 && xg < sizes.XPad[0])) ? [sizes.XPad[0] + sizes.zoom,sizes.XPad[1]] : ( ((sizes.state === 'XYZ' || sizes.state === 'XZ') && (xg > (sizes.XPad[0]+sizes.XSizeAlpha[0] * W) && xg < (sizes.XPad[0]+sizes.XSizeAlpha[0] * W + sizes.XPad[1])) || (sizes.state === 'YZ' || sizes.state === 'Z') && (xg > 0 && xg < sizes.XPad[1])) ? [sizes.XPad[0],sizes.XPad[1] + sizes.zoom] : sizes.XPad ), XSizeAlpha: [sizes.XSizeAlpha[0] * (1.0 - sizes.zoom/W/(sizes.XSizeAlpha[0]+sizes.XSizeAlpha[1])), sizes.XSizeAlpha[1] * (1.0 - sizes.zoom/W/(sizes.XSizeAlpha[0]+sizes.XSizeAlpha[1]))]} : {})"
+        },
+        {
+          "events": "window:pointerdown",
+          "update": "merge(sizes, sizes.pointerover === 'cX' ? (sizes.interpolateTime ? {interpolateTime: null} : {pointerDownOver: 'cX'}) : (sizes.pointerover === 'cY' ? (sizes.interpolateTime ? {interpolateTime: null} : {pointerDownOver: 'cY'}) : (sizes.pointerover === 'cZ' ? (sizes.interpolateTime ? {interpolateTime: null} : {pointerDownOver: 'cZ'}) : (sizes.pointerover === 'cXY' ? (sizes.interpolateTime || sizes.state === 'XY' ? {interpolateTime: null} : {pointerDownOver: 'cXY'}) : {}))))"
+        },
+        {
+          "events": "window:pointerup",
+          "update": "merge(sizes, sizes.pointerDownOver === 'cX' ? ({state: sizes.state === 'YZ' ? 'XYZ' : 'YZ', interpolateTime: [sizes.time, sizes.time + interpolateDelta]}) : (sizes.pointerDownOver === 'cY' ? ({state: sizes.state === 'XZ' ? 'XYZ' : 'XZ', interpolateTime: [sizes.time, sizes.time + interpolateDelta]}) : (sizes.pointerDownOver === 'cZ' ? ({state: sizes.state === 'XYZ' ? 'Z' : sizes.state, interpolateTime: [sizes.time, sizes.time + interpolateDelta]}) : (sizes.pointerDownOver === 'cXY' ? ({state: sizes.state === 'Z' ? 'XYZ' : sizes.state, interpolateTime: sizes.state === 'Z' ? [sizes.time, sizes.time + interpolateDelta] : null, XPad: sizes.state === 'Z' ? [sizes.XPad[0], sizes.XPad[1]-XTS] : sizes.XPad, YPad: sizes.state === 'Z' ? [sizes.YPad[0], sizes.YPad[1]-YTS] : sizes.YPad}) : {}))))"
+        },
+        {
+          "events": "window:pointerup",
+          "update": "merge(sizes, sizes.pointerDownOver === 'cX' ? ({XPad: sizes.state === 'YZ' ? [sizes.XPad[0], sizes.XPad[1]+XTS] : [sizes.XPad[0], sizes.XPad[1]-XTS]}) : (sizes.pointerDownOver === 'cY' ? ({YPad: sizes.state === 'XZ' ? [sizes.YPad[0], sizes.YPad[1]+YTS] : [sizes.YPad[0], sizes.YPad[1]-YTS]}) : (sizes.pointerDownOver === 'cZ' ? ({XPad: sizes.state === 'XYZ' ? [sizes.XPad[0], sizes.XPad[1]-XTS] : [sizes.XPad[0], sizes.XPad[1]+XTS], YPad: sizes.state === 'XYZ' ? [sizes.YPad[0], sizes.YPad[1]-YTS] : [sizes.YPad[0], sizes.YPad[1]+YTS]}) : {})))"
+        },
+        {
+          "events": "window:pointerup",
+          "update": "merge(sizes, {pointerDownOver: null})"
+        },
+        {
+          "events": "window:pointerdown",
+          "update": "merge(sizes, sizes.pointerover === 'cXY' ? {action: sizes.state === 'XYZ' ? 'moveXY' : (sizes.state === 'XZ' ? 'moveX' : (sizes.state === 'YZ' ? 'moveY' : null)), downPoint: [x(), y()], XSizeAlphaAnchor: sizes.state === 'XZ' || sizes.state === 'XYZ' ? sizes.XSizeAlpha : null, YSizeAlphaAnchor: sizes.state === 'YZ' || sizes.state === 'XYZ' ? sizes.YSizeAlpha : null, grabbing: true} : {})"
+        },
+        {
+          "events": "[@cXY:pointerdown, window:pointerup] > window:pointermove",
+          "update": "merge(sizes, {XSizeAlpha: sizes.state === 'XYZ' || sizes.state === 'XZ' ? [clamp(sizes.XSizeAlphaAnchor[0] + (x() - sizes.downPoint[0])/W, minXYSize[0]/W, (sizes.XSizeAlphaAnchor[0]+sizes.XSizeAlphaAnchor[1])/2), 0] : sizes.XSizeAlpha, YSizeAlpha: sizes.state === 'XYZ' || sizes.state === 'YZ' ? [clamp(sizes.YSizeAlphaAnchor[0] - (y() - sizes.downPoint[1])/H, minXYSize[1]/H, (sizes.YSizeAlphaAnchor[0]+sizes.YSizeAlphaAnchor[1])/2), 0] : sizes.YSizeAlpha})"
+        },
+        {
+          "events": "[@cXY:pointerdown, window:pointerup] > window:pointermove",
+          "update": "merge(sizes, {XSizeAlpha: sizes.state === 'XYZ' || sizes.state === 'XZ' ? [sizes.XSizeAlpha[0], sizes.XSizeAlphaAnchor[0]+sizes.XSizeAlphaAnchor[1]-sizes.XSizeAlpha[0]] : sizes.XSizeAlpha, YSizeAlpha: sizes.state === 'XYZ' || sizes.state === 'YZ' ? [sizes.YSizeAlpha[0], sizes.YSizeAlphaAnchor[0]+sizes.YSizeAlphaAnchor[1]-sizes.YSizeAlpha[0]] : sizes.YSizeAlpha})"
+        },
+        {
+          "events": "[@cXY:pointerdown, window:pointerup] > window:pointermove",
+          "update": "merge(sizes, {XSizeBeta: sizes.state === 'XYZ' || sizes.state === 'XZ' ? sizes.XSizeAlpha[0]/sizes.XSizeAlpha[1] : sizes.XSizeBeta, YSizeBeta: sizes.state === 'XYZ' || sizes.state === 'YZ' ? sizes.YSizeAlpha[0]/sizes.YSizeAlpha[1] : sizes.YSizeBeta})"
+        },
+        {
+          "events": "window:pointerup",
+          "update": "merge(sizes, {interpolateTime: (event.movementX !== 0 || event.movementY !== 0) ? null : sizes.interpolateTime, pointerover: xg > sizes.XPad[0] + sizes.XSizeAlpha[0] * W + sizes.XPad[1] - buttonSize + 2 && xg < sizes.XPad[0] + sizes.XSizeAlpha[0] * W + sizes.XPad[1] - 2 ? (yg > sizes.YSizeAlpha[1] * H + 2 && yg < sizes.YSizeAlpha[1] * H + buttonSize - 2 ? (sizes.state === 'XYZ' ? 'cXY' : null) : (yg > sizes.YSizeAlpha[1] * H + sizes.YSizeAlpha[0] * H + sizes.YPad[1] + 2 && yg < H ? (sizes.state === 'XYZ' ? 'cX' : (sizes.state === 'XZ' ? 'cXY' : null)) : null)) : (xg > sizes.XPad[0] - buttonSize + 2 && xg < sizes.XPad[0] - 2 ? (yg > sizes.YSizeAlpha[1] * H + 2 && yg < sizes.YSizeAlpha[1] * H + buttonSize - 2 ? (sizes.state === 'XYZ' ? 'cY' : (sizes.state === 'YZ' ? 'cXY' : null)) : (yg > sizes.YSizeAlpha[1] * H + sizes.YSizeAlpha[0] * H + sizes.YPad[1] + 2 && yg < H ? (sizes.state === 'XYZ' ? 'cZ' : (sizes.state === 'XZ' ? 'cY' : (sizes.state === 'YZ' ? 'cX' : 'cXY'))) : null)) : null)})"
+        },
+        {
+          "events": "window:pointerup",
+          "update": "merge(sizes, {grabbing: false})"
+        },
+        {
+          "events": "window:pointerdown",
+          "update": "merge(sizes, {interpolateTime: null})"
+        }
+      ]
+    },
+    {
+      "name": "interpolateTimeSizes",
+      "update": "sizes.interpolateTime"
+    },
+    {
+      "name": "timeSizes",
+      "update": "sizes.time"
+    },
+    {
+      "name": "tSizes",
+      "update": "interpolateTimeSizes ? clamp((timeSizes-interpolateTimeSizes[0])/span(interpolateTimeSizes), 0, 1): 1"
+    },
+    {
+      "name": "tEaseSizes",
+      "update": "tSizes < 0.5 ? a * pow(tSizes, n) + b * pow(tSizes, 1 + alpha): 1 - (a * pow(1 - tSizes, n) + b * pow(1 - tSizes, 1 + alpha))"
+    },
+    {
+      "name": "oldStateSizes",
+      "update": "interpolateTimeSizes ? oldStateSizes : sizes.state"
+    },
+    {
+      "name": "XPad1",
+      "update": "sizes.state === 'Z' || sizes.state === 'YZ' ? 0 : sizes.XPad[0]"
+    },
+    {
+      "name": "XPad2",
+      "update": "sizes.XPad[1]"
+    },
+    {
+      "name": "XSize1",
+      "update": "sizes.state === 'Z' || sizes.state === 'YZ' ? 0 : sizes.XSizeAlpha[0]*W"
+    },
+    { 
+      "name": "plotXSize",
+      "update": "W - sizes.XPad[1]"
+    },
+    {
+      "name": "XSize2",
+      "update": "sizes.state === 'Z' || sizes.state === 'YZ' ? plotXSize : sizes.XSizeAlpha[1]*W"
+    },
+    {
+      "name": "oldXPad1",
+      "update": "interpolateTimeSizes ? oldXPad1 : XPad1"
+    },
+    {
+      "name": "oldXPad2",
+      "update": "interpolateTimeSizes ? oldXPad2 : XPad2"
+    },
+    {
+      "name": "oldXSize1",
+      "update": "interpolateTimeSizes ? oldXSize1 : XSize1"
+    },
+    {
+      "name": "oldXTotalSize1",
+      "update": "oldXPad1 + oldXSize1"
+    },
+    {
+      "name": "oldXSize2",
+      "update": "interpolateTimeSizes ? oldXSize2 : XSize2"
+    },
+    {
+      "name": "interpolatedXTotalSize1",
+      "update": "interpolateTimeSizes ? lerp([oldXTotalSize1, XPad1 + XSize1], tEaseSizes) : XPad1 + XSize1"
+    },
+    {
+      "name": "interpolatedXPad1",
+      "update": "min(sizes.XPad[0], interpolatedXTotalSize1)"
+    },
+    {
+      "name": "interpolatedXPad2",
+      "update": "interpolateTimeSizes ? lerp([oldXPad2, XPad2], tEaseSizes) : XPad2"
+    },
+    {
+      "name": "interpolatedXSize1",
+      "update": "max(0, interpolatedXTotalSize1 - sizes.XPad[0])"
+    },
+    {
+      "name": "interpolatedXSize2",
+      "update": "interpolateTimeSizes ? lerp([oldXSize2, XSize2], tEaseSizes) : XSize2"
+    },
+    {
+      "name": "YPad1",
+      "update": "sizes.state === 'Z' || sizes.state === 'XZ' ? 0 : sizes.YPad[0]"
+    },
+    {
+      "name": "YPad2",
+      "update": "sizes.YPad[1]"
+    },
+    {
+      "name": "YSize1",
+      "update": "sizes.state === 'Z' || sizes.state === 'XZ' ? 0 : sizes.YSizeAlpha[0]*H"
+    },
+    { 
+      "name": "plotYSize",
+      "update": "H - sizes.YPad[1]"
+    },
+    {
+      "name": "YSize2",
+      "update": "sizes.state === 'Z' || sizes.state === 'XZ' ? plotYSize : sizes.YSizeAlpha[1]*H"
+    },
+    {
+      "name": "oldYPad1",
+      "update": "interpolateTimeSizes ? oldYPad1 : YPad1"
+    },
+    {
+      "name": "oldYPad2",
+      "update": "interpolateTimeSizes ? oldYPad2 : YPad2"
+    },
+    {
+      "name": "oldYSize1",
+      "update": "interpolateTimeSizes ? oldYSize1 : YSize1"
+    },
+    {
+      "name": "oldYSize2",
+      "update": "interpolateTimeSizes ? oldYSize2 : YSize2"
+    },
+    {
+      "name": "oldYTotalSize1",
+      "update": "oldYPad1 + oldYSize1"
+    },
+    {
+      "name": "interpolatedYTotalSize1",
+      "update": "interpolateTimeSizes ? lerp([oldYTotalSize1, YPad1 + YSize1], tEaseSizes) : YPad1 + YSize1"
+    },    
+    {
+      "name": "interpolatedYPad1",
+      "update": "min(sizes.YPad[0], interpolatedYTotalSize1)"
+    },
+    {
+      "name": "interpolatedYPad2",
+      "update": "interpolateTimeSizes ? lerp([oldYPad2, YPad2], tEaseSizes) : YPad2"
+    },
+    {
+      "name": "interpolatedYSize1",
+      "update": "max(0, interpolatedYTotalSize1 - sizes.YPad[0])"
+    },
+    {
+      "name": "interpolatedYSize2",
+      "update": "interpolateTimeSizes ? lerp([oldYSize2, YSize2], tEaseSizes) : YSize2"
+    },
+    {
+      "name": "sizesPointerDownOver",
+      "update": "sizes.pointerDownOver"
+    },
+    {
+      "name": "sizesState",
+      "update": "sizes.state"
+    },
+    {
+      "name": "sizesPointerover",
+      "update": "sizes.pointerover"
+    },
+    {
+      "name": "sizesZoom",
+      "update": "sizes.zoom"
+    },
+    { "name": "XPad", "update": "[interpolatedXPad1, interpolatedXPad2, 2/25*W]" },
+    { "name": "YPad", "update": "[interpolatedYPad1, interpolatedYPad2]" },
+    { "name": "XSize", "update": "[interpolatedXSize1, interpolatedXSize2]" },
+    { "name": "YSize", "update": "[interpolatedYSize1, interpolatedYSize2]" },
+    { "name": "XStep", "update": "[XSize[0] + XPad[1], XSize[1] + XPad[2]]"},
+    { "name": "YStep", "update": "[YSize[0] + YPad[0], YSize[1] + YPad[1]]"},
+    { "name": "XPos", "update": "[XPad[0], XPad[0]+XStep[0]]"},
+    { "name": "YPos", "update": "[YStep[1], 0]"},
+    { "name": "buttonSize", "update": "max(min(XPad[0], XPad[1], YPad[0], YPad[1]), BetweenPadX)"},
+    {"name": "XName", "value": "Beak Length (mm)"},
+    {"name": "YName", "value": "Beak Depth (mm)"},
+    {"name": "smallWidth", "value": 1},
+    {"name": "bigWidth", "value": 1.5},
+    {
+      "name": "cellMetaXY", 
+      "update": "{x: {ind: 0, type: 'Overview'}, y: {ind: 0, type: 'Overview'}, x_min_pos: XPos[0], y_min_pos: YPos[0], x_max_pos: XPos[0]+XSize[0], y_max_pos: YPos[0]+YSize[0], width: XSize[0], height: YSize[0], xscale: 'sX', interpolatedXscale: 'interpolatedSX', yscale: 'sY', interpolatedYscale: 'interpolatedSY', useBrushX: true, useBrushY: true, isZoom: false, brushingCursor: 'crosshair'}"
+    },
+    {
+      "name": "cellMetaX", 
+      "update": "{x: {ind: 1, type: 'Details'}, y: {ind: 0, type: 'Overview'}, x_min_pos: XPos[1], y_min_pos: YPos[0], x_max_pos: XPos[1]+XSize[1], y_max_pos: YPos[0]+YSize[0], width: XSize[1], height: YSize[0], xscale: 'sXD', interpolatedXscale: 'interpolatedSXD', yscale: 'sY', interpolatedYscale: 'interpolatedSY', useBrushX: true, useBrushY: false, isZoom: false, brushingCursor: 'ew-resize'}"
+    },
+    {
+      "name": "cellMetaY", 
+      "update": "{x: {ind: 0, type: 'Overview'}, y: {ind: 1, type: 'Details'}, x_min_pos: XPos[0], y_min_pos: YPos[1], x_max_pos: XPos[0]+XSize[0], y_max_pos: YPos[1]+YSize[1], width: XSize[0], height: YSize[1], xscale: 'sX', interpolatedXscale: 'interpolatedSX', yscale: 'sYD', interpolatedYscale: 'interpolatedSYD', useBrushX: false, useBrushY: true, isZoom: false, brushingCursor: 'ns-resize'}"
+    },
+    {
+      "name": "cellMetaZ", 
+      "update": "{x: {ind: 1, type: 'DetailsZoom'}, y: {ind: 1, type: 'DetailsZoom'}, x_min_pos: XPos[1], y_min_pos: YPos[1], x_max_pos: XPos[1]+XSize[1], y_max_pos: YPos[1]+YSize[1], width: XSize[1], height: YSize[1], xscale: 'sXZ', interpolatedXscale: 'interpolatedSXZ', yscale: 'sYZ', interpolatedYscale: 'interpolatedSYZ', useBrushX: false, useBrushY: false, isZoom: true, brushingCursor: 'crosshair'}"
+    },
+    {
+      "name": "cellMeta",
+      "update": "{XY: cellMetaXY, X: cellMetaX, Y: cellMetaY, Z: cellMetaZ}"
+    },
+    {
+      "name": "check5",
+      "update": "cellMeta.X.x_min_pos"
+    },
+    {
+      "name": "rX",
+      "update": "({XY:[0,XSize[0]],X:[0,XSize[1]],Y:[0,XSize[0]],Z:[0,XSize[1]]})"
+    },
+    {
+      "name": "rY",
+      "update": "({XY:[0,YSize[0]],X:[0,YSize[0]],Y:[0,YSize[1]],Z:[0,YSize[1]]})"
+    },
+    {
+      "name": "interpolateDelta",
+      "value": 500
+    },
+    {
+      "name": "minPixelBrush",
+      "value": 8
+    },
+    {
+      "name": "minPixelRect",
+      "value": 2
+    },
+    {
+      "name": "cell", "init": "{cell: null, brushX: domX, brushY: domY, curX: domX, curY: domY, anchorBrushX: null, anchorBrushY: null, anchorCurX: null, anchorCurY: null, downPoint: null, lastDragX: null, lastDragY: null, pointerover: 'idle', pointerdown: false, dblclick: false, moveAfterDown: null, idHover: null, hoverCell: null, insideCell: null, XYMode: null,XMode: null, YMode: null, ZMode: null, downPointPixel: null, idActive: null, zoom: null, isStartX: true, isStartY: true, isStartZ: false, idInteractive: null, interactiveCell: null, time: null, interpolateTime: null, x: null, y: null, testCell: null}",
+      "on": [
+        {
+          "events": "timer",
+          "force": true,
+          "update": "merge(cell, {brushX: span(cell.curX) ? cell.brushX : domX, curX: span(cell.curX) ? cell.curX : domX})"
+        },
+        {
+          "events": "timer",
+          "force": true,
+          "update": "merge(cell, {brushY: span(cell.curY) ? cell.brushY : domY, curY: span(cell.curY) ? cell.curY : domY})"
+        },
+        {
+          "events": "timer", 
+          "update": "merge(cell, {time: now(), interpolateTime: cell.interpolateTime && now() >= cell.interpolateTime[1] ? null : cell.interpolateTime})"
+        },
+        {
+          "events": "wheel!",
+          "merge": [
+            {"markname": "drag"},
+            {"markname": "cellXY"},
+            {"markname": "cellX"},
+            {"markname": "cellY"},
+            {"markname": "brushXY"},
+            {"markname": "brushX"},
+            {"markname": "brushY"}
+          ],
+          "update": "merge(cell, {zoom: pow(1.003, event.deltaY * pow(16, event.deltaMode))})"
+        },
+        {
+          "events": "wheel!",
+          "update": "merge(cell, {brushX: cell.idHover === 'Z' ? clampRange([invert(cellMeta.Z.xscale, x(group())) + (cell.brushX[0] - invert(cellMeta.Z.xscale, x(group()))) * cell.zoom, invert(cellMeta.Z.xscale, x(group())) + (cell.brushX[1] - invert(cellMeta.Z.xscale, x(group()))) * cell.zoom], cell.curX[0], cell.curX[1]) : (cell.isStartX && (cell.idHover === 'XY' || cell.idHover === 'X') ? clampRange([min(invert(cellMeta[cell.idHover].xscale, x(group())) + (cell.curX[0] - invert(cellMeta[cell.idHover].xscale, x(group()))) * cell.zoom, cell.brushX && !cell.isStartX ? cell.brushX[0] : domX[1]), max(invert(cellMeta[cell.idHover].xscale, x(group())) + (cell.curX[1] - invert(cellMeta[cell.idHover].xscale, x(group()))) * cell.zoom, cell.brushX && !cell.isStartX ? cell.brushX[1] : domX[0])], domX[0], domX[1]) : cell.brushX), brushY: cell.idHover === 'Z' ? clampRange([invert(cellMeta.Z.yscale, y(group())) + (cell.brushY[0] - invert(cellMeta.Z.yscale, y(group()))) * cell.zoom, invert(cellMeta.Z.yscale, y(group())) + (cell.brushY[1] - invert(cellMeta.Z.yscale, y(group()))) * cell.zoom], cell.curY[0], cell.curY[1]) : (cell.isStartY && (cell.idHover === 'XY' || cell.idHover === 'Y') ? clampRange([min(invert(cellMeta[cell.idHover].yscale, y(group())) + (cell.curY[0] - invert(cellMeta[cell.idHover].yscale, y(group()))) * cell.zoom, cell.brushY && !cell.isStartY ? cell.brushY[0] : domY[1]), max(invert(cellMeta[cell.idHover].yscale, y(group())) + (cell.curY[1] - invert(cellMeta[cell.idHover].yscale, y(group()))) * cell.zoom, cell.brushY && !cell.isStartY ? cell.brushY[1] : domY[0])], domY[0], domY[1]) : cell.brushY), curX: cell.idHover === 'X' || cell.idHover === 'XY' ? clampRange([min(invert(cellMeta[cell.idHover].xscale, x(group())) + (cell.curX[0] - invert(cellMeta[cell.idHover].xscale, x(group()))) * cell.zoom, cell.brushX && !cell.isStartX ? cell.brushX[0] : domX[1]), max(invert(cellMeta[cell.idHover].xscale, x(group())) + (cell.curX[1] - invert(cellMeta[cell.idHover].xscale, x(group()))) * cell.zoom, cell.brushX && !cell.isStartX ? cell.brushX[1] : domX[0])], domX[0], domX[1]) : cell.curX, curY: cell.idHover === 'Y' || cell.idHover === 'XY' ? clampRange([min(invert(cellMeta[cell.idHover].yscale, y(group())) + (cell.curY[0] - invert(cellMeta[cell.idHover].yscale, y(group()))) * cell.zoom, cell.brushY && !cell.isStartY ? cell.brushY[0] : domY[1]), max(invert(cellMeta[cell.idHover].yscale, y(group())) + (cell.curY[1] - invert(cellMeta[cell.idHover].yscale, y(group()))) * cell.zoom, cell.brushY && !cell.isStartY ? cell.brushY[1] : domY[0])], domY[0], domY[1]) : cell.curY, isStartX: cell.idHover === 'Z' && cell.isStartX && cell.zoom < 1.0 ? false : cell.isStartX, isStartY: cell.idHover === 'Z' && cell.isStartY && cell.zoom < 1.0 ? false : cell.isStartY, isStartZ: cell.idHover === 'Z' ? false : cell.isStartZ, XYMode: cell.idHover === 'XY' ? 'zoom' : null, XMode: cell.idHover === 'X' ? 'zoom' : null, YMode: cell.idHover === 'Y' ? 'zoom' : null, ZMode: cell.idHover === 'Z' ? 'zoom' : null})"
+        },
+        {
+          "events": "@brushXY:pointerdown",
+          "consume": true,
+          "update": "merge(cell, { cell: group(), idActive: 'XY',anchorBrushX: cell.brushX, anchorBrushY: cell.brushY, anchorCurX: cell.curX, anchorCurY: cell.curY, downPoint: [invert(cellMeta.XY.xscale, x(group())), invert(cellMeta.XY.yscale, y(group()))], downPointPixel: event.shiftKey ? [x(group()), y(group())] : null, pointerdown: true, dblclick: false, XYMode: event.shiftKey ? 'pan' : 'brushMove', idInteractive: 'XY', interactiveCell: group(), interpolateTime: cell.idInteractive !== 'XY' ? null : cell.interpolateTime, x: null, y: null})"
+        },
+        {
+          "events": "@brushX:pointerdown",
+          "consume": true,
+          "update": "merge(cell, { cell: group(), idActive: 'X',anchorBrushX: cell.brushX, anchorCurX: cell.curX, downPoint: [invert(cellMeta.X.xscale, x(group())), invert(cellMeta.X.yscale, y(group()))], downPointPixel: event.shiftKey ? [x(group()), y(group())] : null, pointerdown: true, dblclick: false, XMode: event.shiftKey ? 'pan' : 'brushMove', idInteractive: 'X', interactiveCell: group(), interpolateTime: cell.idInteractive !== 'X' ? null : cell.interpolateTime, x: null, y: null})"
+        },
+        {
+          "events": "@brushY:pointerdown",
+          "consume": true,
+          "update": "merge(cell, { cell: group(), idActive: 'Y',anchorBrushY: cell.brushY, anchorCurY: cell.curY,  downPoint: [invert(cellMeta.Y.xscale, x(group())),invert(cellMeta.Y.yscale, y(group()))], downPointPixel: event.shiftKey ? [x(group()), y(group())] : null, pointerdown: true, dblclick: false, YMode: event.shiftKey ? 'pan' : 'brushMove', idInteractive: 'Y', interactiveCell: group(), interpolateTime: cell.idInteractive !== 'Y' ? null : cell.interpolateTime, x: null, y: null})"
+        },
+        {
+          "events": "@drag:pointerdown",
+          "consume": true,
+          "update": "merge(cell, {cell: group(), idActive: 'Z',downPoint: event.shiftKey ? null : [invert(cellMeta.Z.xscale, x(group())), invert(cellMeta.Z.yscale, y(group()))], lastDragX: event.shiftKey ? cell.lastDragX : invert(cellMeta.Z.xscale, [x(group()), x(group())]), lastDragY: event.shiftKey ? cell.lastDragY : invert(cellMeta.Z.yscale, [y(group()), y(group())]), ZMode: event.shiftKey ? 'pan' : 'drag', pointerdown: true, dblclick: false, anchorBrushX: cell.brushX, anchorBrushY: cell.brushY, downPointPixel: event.shiftKey ? [x(group()), y(group())] : null, isStartZ: false, idInteractive: 'Z', interactiveCell: group(), interpolateTime: cell.idInteractive !== 'Z' ? null : cell.interpolateTime})"
+        },
+        {
+          "events": "@cellXY:pointerdown",
+          "consume": true,
+          "update": "merge(cell, {cell: group(), testCell: cell.pointerover !== 'idle' ? group() : cell.testCell, idActive: 'XY',brushX: event.shiftKey ? cell.brushX : invert(cellMeta.XY.xscale, [x(group()), x(group())]), brushY: event.shiftKey ? cell.brushY : invert(cellMeta.XY.yscale, [y(group()), y(group())]), anchorCurX: event.shiftKey ? cell.curX : null, anchorCurY: event.shiftKey ? cell.curY : null, downPoint: event.shiftKey ? null : [invert(cellMeta.XY.xscale, x(group())), invert(cellMeta.XY.yscale, y(group()))], XYMode: event.shiftKey ? 'pan' : 'brushSelect', pointerdown: true, dblclick: false, downPointPixel: event.shiftKey ? [x(group()), y(group())] : null, isStartX: event.shiftKey ? cell.isStartX : false, isStartY: event.shiftKey ? cell.isStartY : false, isStartZ: event.shiftKey ? cell.isStartZ : false, animate: true, animateBlock: false, interpolateTime: [cell.time, cell.time + interpolateDelta], idInteractive: 'XY', interactiveCell: group()})"
+        },
+        {
+          "events": "@cellX:pointerdown",
+          "consume": true,
+          "update": "merge(cell, {cell: group(), idActive: 'X',brushX: event.shiftKey ? cell.brushX : invert(cellMeta.X.xscale, [x(group()), x(group())]), anchorCurX: event.shiftKey ? cell.curX : null, downPoint: event.shiftKey ? null : [invert(cellMeta.X.xscale, x(group())), invert(cellMeta.X.yscale, y(group()))], XMode: event.shiftKey ? 'pan' : 'brushSelect', pointerdown: true, dblclick: false, downPointPixel: event.shiftKey ? [x(group()), y(group())] : null, isStartX: event.shiftKey ? cell.isStartX : false, isStartZ: event.shiftKey ? cell.isStartZ : false, interpolateTime: [cell.time, cell.time + interpolateDelta], idInteractive: 'X', interactiveCell: group()})"
+        },
+        {
+          "events": "@cellY:pointerdown",
+          "consume": true,
+          "update": "merge(cell, {cell: group(), idActive: 'Y',brushY: event.shiftKey ? cell.brushY : invert(cellMeta.Y.yscale, [y(group()), y(group())]), anchorCurY: event.shiftKey ? cell.curY : null, downPoint: event.shiftKey ? null : [invert(cellMeta.Y.xscale, x(group())), invert(cellMeta.Y.yscale, y(group()))], YMode: event.shiftKey ? 'pan' : 'brushSelect', pointerdown: true, dblclick: false, downPointPixel: event.shiftKey ? [x(group()), y(group())] : null, isStartY: event.shiftKey ? cell.isStartY : false, isStartZ: event.shiftKey ? cell.isStartZ : false, interpolateTime: [cell.time, cell.time + interpolateDelta], idInteractive: 'Y', interactiveCell: group()})"
+        },
+        {
+          "events": "window:pointerdown",
+          "update": "merge(cell, {cell: cell.pointerover !== 'idle' ? cell.cell : null, idActive: cell.pointerover !== 'idle' ? cell.idActive : null, pointerdown: true, dblclick: false, idInteractive: cell.pointerover === 'idle' ? null : cell.idInteractive, interactiveCell: cell.pointerover === 'idle' ? null : cell.interactiveCell, interpolateTime: cell.pointerover === 'idle' && cell.idInteractive ? null : cell.interpolateTime, x: cell.pointerover === 'idle' ? null : cell.x, y: cell.pointerover === 'idle' ? null : cell.y})"
+        },
+        {
+          "events": "[@brushXY:pointerdown, window:pointerup] > window:pointermove",
+          "consume": true,
+          "update": "merge(cell, cell.cell && cell.idActive === 'XY' ? (cell.XYMode === 'brushMove' ? { brushX: isArray(cell.brushX) && isArray(cell.downPoint) ? clampRange([cell.anchorBrushX[0] + invert(cellMeta.XY.xscale, clamp(x(cell.cell), rX['XY'][0], rX['XY'][1])) - cell.downPoint[0], cell.anchorBrushX[1] + invert(cellMeta.XY.xscale, clamp(x(cell.cell), rX['XY'][0], rX['XY'][1])) - cell.downPoint[0]], cell.curX[0], cell.curX[1]) : cell.brushX, brushY : isArray(cell.brushY) && isArray(cell.downPoint) ? clampRange([cell.anchorBrushY[0] + invert(cellMeta.XY.yscale, clamp(y(cell.cell), rY['XY'][0], rY['XY'][1])) - cell.downPoint[1], cell.anchorBrushY[1] + invert(cellMeta.XY.yscale, clamp(y(cell.cell), rY['XY'][0], rY['XY'][1])) - cell.downPoint[1]], cell.curY[0], cell.curY[1]) : cell.brushY, moveAfterDown: 'brushMove', isStartZ: false, x: null, y: null} : (cell.XYMode === 'pan' ? { brushX: cell.isStartX ? clampRange(panLinear(cell.anchorCurX, (invert(cellMeta.XY.xscale, x(cell.cell)) - invert(cellMeta.XY.xscale, cell.downPointPixel[0]))/span(cell.curX)), domX[0], domX[1]) : cell.brushX, brushY: cell.isStartY ? clampRange(panLinear(cell.anchorCurY, (invert(cellMeta.XY.yscale, y(cell.cell)) - invert(cellMeta.XY.yscale, cell.downPointPixel[1]))/span(cell.curY)), domY[0], domY[1]) : cell.brushY, curX: clampRange(panLinear(cell.anchorCurX, (invert(cellMeta.XY.xscale, x(cell.cell)) - invert(cellMeta.XY.xscale, cell.downPointPixel[0]))/span(cell.curX)), max(domX[0], cell.brushX && !cell.isStartX ? cell.brushX[1] - span(cell.curX) : domX[0]), min(domX[1], cell.brushX && !cell.isStartX ? cell.brushX[0] + span(cell.curX) : domX[1])), curY: clampRange(panLinear(cell.anchorCurY, (invert(cellMeta.XY.yscale, y(cell.cell)) - invert(cellMeta.XY.yscale, cell.downPointPixel[1]))/span(cell.curY)), max(domY[0], cell.brushY && !cell.isStartY ? cell.brushY[1] - span(cell.curY) : domY[0]), min(domY[1], cell.brushY && !cell.isStartY ? cell.brushY[0] + span(cell.curY) : domY[1])), moveAfterDown: 'pan'} : {})) : {})"
+        },
+        {
+          "events": "[@brushX:pointerdown, window:pointerup] > window:pointermove",
+          "consume": true,
+          "update": "merge(cell, cell.cell && cell.idActive === 'X' ? (cell.XMode === 'brushMove' ? { brushX: isArray(cell.brushX) && isArray(cell.downPoint) ? clampRange([cell.anchorBrushX[0] + invert(cellMeta.X.xscale, clamp(x(cell.cell), rX['X'][0], rX['X'][1])) - cell.downPoint[0], cell.anchorBrushX[1] + invert(cellMeta.X.xscale, clamp(x(cell.cell), rX['X'][0], rX['X'][1])) - cell.downPoint[0]], cell.curX[0], cell.curX[1]) : cell.brushX, moveAfterDown: 'brushMove', isStartZ: false, x: null, y: null} : (cell.XMode === 'pan' ? { brushX: cell.isStartX ? clampRange(panLinear(cell.anchorCurX, (invert(cellMeta.X.xscale, x(cell.cell)) - invert(cellMeta.X.xscale, cell.downPointPixel[0]))/span(cell.curX)), domX[0], domX[1]) : cell.brushX, curX: clampRange(panLinear(cell.anchorCurX, (invert(cellMeta.X.xscale, x(cell.cell)) - invert(cellMeta.X.xscale, cell.downPointPixel[0]))/span(cell.curX)), max(domX[0], cell.brushX && !cell.isStartX ? cell.brushX[1] - span(cell.curX) : domX[0]), min(domX[1], cell.brushX && !cell.isStartX ? cell.brushX[0] + span(cell.curX) : domX[1])), moveAfterDown: 'pan'} : {})) : {})"
+        },
+        {
+          "events": "[@brushY:pointerdown, window:pointerup] > window:pointermove",
+          "consume": true,
+          "update": "merge(cell, cell.cell && cell.idActive === 'Y' ? (cell.YMode === 'brushMove' ? { brushY : isArray(cell.brushY) && isArray(cell.downPoint) ? clampRange([cell.anchorBrushY[0] + invert(cellMeta.Y.yscale, clamp(y(cell.cell), rY['Y'][0], rY['Y'][1])) - cell.downPoint[1], cell.anchorBrushY[1] + invert(cellMeta.Y.yscale, clamp(y(cell.cell), rY['Y'][0], rY['Y'][1])) - cell.downPoint[1]], cell.curY[0], cell.curY[1]) : cell.brushY, moveAfterDown: 'brushMove', isStartZ: false, x: null, y: null} : (cell.YMode === 'pan' ? { brushY: cell.isStartY ? clampRange(panLinear(cell.anchorCurY, (invert(cellMeta.Y.yscale, y(cell.cell)) - invert(cellMeta.Y.yscale, cell.downPointPixel[1]))/span(cell.curY)), domY[0], domY[1]) : cell.brushY, curY: clampRange(panLinear(cell.anchorCurY, (invert(cellMeta.Y.yscale, y(cell.cell)) - invert(cellMeta.Y.yscale, cell.downPointPixel[1]))/span(cell.curY)), max(domY[0], cell.brushY && !cell.isStartY ? cell.brushY[1] - span(cell.curY) : domY[0]), min(domY[1], cell.brushY && !cell.isStartY ? cell.brushY[0] + span(cell.curY) : domY[1])), moveAfterDown: 'pan'} : {})) : {})"
+        },
+        {
+          "events": "[@drag:pointerdown, window:pointerup] > window:pointermove",
+          "consume": true,
+          "update": "merge(cell, cell.cell && cell.idActive === 'Z' ? ((cell.ZMode === 'drag' && isArray(cell.lastDragX) && isArray(cell.lastDragY)) ? { lastDragX: clampRange([cell.downPoint[0], invert(cellMeta.Z.xscale, clamp(x(cell.cell), rX['Z'][0], rX['Z'][1]))], invert(cellMeta.Z.xscale, rX['Z'][0]), invert(cellMeta.Z.xscale, rX['Z'][1])), lastDragY: clampRange([cell.downPoint[1], invert(cellMeta.Z.yscale, clamp(y(cell.cell), rY['Z'][0], rY['Z'][1]))], invert(cellMeta.Z.yscale, YSize[cellMeta.Z.y.ind]), invert(cellMeta.Z.yscale, rY['Z'][0])), moveAfterDown: 'drag'} : (cell.ZMode === 'pan' && cell.anchorBrushX && cell.anchorBrushY ? {brushX: clampRange(panLinear(cell.anchorBrushX, (x(cell.cell) - cell.downPointPixel[0])/XSize[1]), cell.curX[0], cell.curX[1]), brushY: clampRange(panLinear(cell.anchorBrushY, -(y(cell.cell) - cell.downPointPixel[1])/YSize[1]), cell.curY[0], cell.curY[1]), moveAfterDown: 'pan'} : {})) : {})"
+        },
+        {
+          "events": "[@cellXY:pointerdown, window:pointerup] > window:pointermove",
+          "update": "merge(cell, cell.cell && cell.idActive === 'XY' ? (cell.XYMode === 'brushSelect' ? { brushX: isArray(cell.downPoint) ? clampRange([cell.downPoint[0], invert(cellMeta.XY.xscale, clamp(x(cell.cell), rX['XY'][0], rX['XY'][1]))], cell.curX[0], cell.curX[1]) : cell.brushX, brushY: isArray(cell.downPoint) ? clampRange([cell.downPoint[1], invert(cellMeta.XY.yscale, clamp(y(cell.cell), rY['XY'][0], rY['XY'][1]))], cell.curY[0], cell.curY[1]) : cell.brushY, moveAfterDown: 'brushSelect', isStartX: false, isStartY: false} : (cell.XYMode === 'pan' ? { brushX: cell.isStartX ? clampRange(panLinear(cell.anchorCurX, (invert(cellMeta.XY.xscale, x(cell.cell)) - invert(cellMeta.XY.xscale, cell.downPointPixel[0]))/span(cell.curX)), domX[0], domX[1]) : cell.brushX, brushY: cell.isStartY ? clampRange(panLinear(cell.anchorCurY, (invert(cellMeta.XY.yscale, y(cell.cell)) - invert(cellMeta.XY.yscale, cell.downPointPixel[1]))/span(cell.curY)), domY[0], domY[1]) : cell.brushY, curX: clampRange(panLinear(cell.anchorCurX, (invert(cellMeta.XY.xscale, x(cell.cell)) - invert(cellMeta.XY.xscale, cell.downPointPixel[0]))/span(cell.curX)), max(domX[0], cell.brushX && !cell.isStartX ? cell.brushX[1] - span(cell.curX) : domX[0]), min(domX[1], cell.brushX && !cell.isStartX ? cell.brushX[0] + span(cell.curX) : domX[1])), curY: clampRange(panLinear(cell.anchorCurY, (invert(cellMeta.XY.yscale, y(cell.cell)) - invert(cellMeta.XY.yscale, cell.downPointPixel[1]))/span(cell.curY)), max(domY[0], cell.brushY && !cell.isStartY ? cell.brushY[1] - span(cell.curY) : domY[0]), min(domY[1], cell.brushY && !cell.isStartY ? cell.brushY[0] + span(cell.curY) : domY[1])), moveAfterDown: 'pan'} : {})) : {})"
+        },
+        {
+          "events": "[@cellX:pointerdown, window:pointerup] > window:pointermove",
+          "update": "merge(cell, cell.cell && cell.idActive === 'X' ? (cell.XMode === 'brushSelect' ? { brushX: isArray(cell.downPoint) ? clampRange([cell.downPoint[0], invert(cellMeta.X.xscale, clamp(x(cell.cell), rX['X'][0], rX['X'][1]))], cell.curX[0], cell.curX[1]) : cell.brushX, moveAfterDown: 'brushSelect', isStartX: false} : (cell.XMode === 'pan' ? { brushX: cell.isStartX ? clampRange(panLinear(cell.anchorCurX, (invert(cellMeta.X.xscale, x(cell.cell)) - invert(cellMeta.X.xscale, cell.downPointPixel[0]))/span(cell.curX)), domX[0], domX[1]) : cell.brushX, curX: clampRange(panLinear(cell.anchorCurX, (invert(cellMeta.X.xscale, x(cell.cell)) - invert(cellMeta.X.xscale, cell.downPointPixel[0]))/span(cell.curX)), max(domX[0], cell.brushX && !cell.isStartX ? cell.brushX[1] - span(cell.curX) : domX[0]), min(domX[1], cell.brushX && !cell.isStartX ? cell.brushX[0] + span(cell.curX) : domX[1])), moveAfterDown: 'pan'} : {})) : {})"
+        },
+        {
+          "events": "[@cellY:pointerdown, window:pointerup] > window:pointermove",
+          "update": "merge(cell, cell.cell && cell.idActive === 'Y' ? (cell.YMode === 'brushSelect' ? { brushY: isArray(cell.downPoint) ? clampRange([cell.downPoint[1], invert(cellMeta.Y.yscale, clamp(y(cell.cell), rY['Y'][0], rY['Y'][1]))], cell.curY[0], cell.curY[1]) : cell.brushY, moveAfterDown: 'brushSelect', isStartY: false} : (cell.YMode === 'pan' ? { brushY: cell.isStartY ? clampRange(panLinear(cell.anchorCurY, (invert(cellMeta.Y.yscale, y(cell.cell)) - invert(cellMeta.Y.yscale, cell.downPointPixel[1]))/span(cell.curY)), domY[0], domY[1]) : cell.brushY, curY: clampRange(panLinear(cell.anchorCurY, (invert(cellMeta.Y.yscale, y(cell.cell)) - invert(cellMeta.Y.yscale, cell.downPointPixel[1]))/span(cell.curY)), max(domY[0], cell.brushY && !cell.isStartY ? cell.brushY[1] - span(cell.curY) : domY[0]), min(domY[1], cell.brushY && !cell.isStartY ? cell.brushY[0] + span(cell.curY) : domY[1])), moveAfterDown: 'pan'} : {})) : {})"
+        },
+        {
+          "events": "window:pointermove",
+          "update": "merge(cell, cell.pointerdown ? {} : {XYMode: cell.XYMode === 'zoom' ? null : cell.XYMode, XMode: cell.XMode === 'zoom' ? null : cell.XMode, YMode: cell.YMode === 'zoom' ? null : cell.YMode, ZMode: cell.ZMode === 'zoom' ? null : cell.ZMode, idInteractive: event.movementX !== 0 || event.movementY !== 0 ? cell.idHover : cell.idInteractive, interactiveCell: event.movementX !== 0 || event.movementY !== 0 ? cell.hoverCell : cell.interactiveCell, interpolateTime: (event.movementX !== 0 || event.movementY !== 0) && (!cell.idInteractive || cell.idInteractive !== cell.idHover) ? null : cell.interpolateTime})"
+        },
+        {
+          "events": "window:pointermove",
+          "update": "merge(cell, {xGlob: cell.idInteractive ? max(x() - deltaCanvasSavior[0], 0) : null, yGlob: cell.idInteractive ? max(y() - deltaCanvasSavior[1], 0) : null, x: cell.moveAfterDown !== 'brushMove' && cell.idInteractive && (cell.pointerdown || !(event.movementX === 0 && event.movementY === 0)) ? x(cell.interactiveCell) : null, y: cell.idInteractive && cell.moveAfterDown !== 'brushMove' && (cell.pointerdown || !(event.movementX === 0 && event.movementY === 0)) ? y(cell.interactiveCell) : null})"
+        },
+        {
+          "events": "@brushXY:pointerover, @brushXY:mouseover",
+          "consume": true,
+          "update": "merge(cell, { cell: cell.pointerdown ? cell.cell : group(), pointerover: 'brush', hoverCell: group(), idHover: 'XY', insideCell: true})"
+        },
+        {
+          "events": "@brushX:pointerover, @brushX:mouseover",
+          "consume": true,
+          "update": "merge(cell, { cell: cell.pointerdown ? cell.cell : group(), pointerover: 'brush', hoverCell: group(), idHover: 'X', insideCell: true})"
+        },
+        {
+          "events": "@brushY:pointerover, @brushY:mouseover",
+          "consume": true,
+          "update": "merge(cell, { cell: cell.pointerdown ? cell.cell : group(), pointerover: 'brush', hoverCell: group(), idHover: 'Y', insideCell: true})"
+        },
+        {
+          "events": "@drag:pointerover, @drag:mouseover",
+          "consume": true,
+          "update": "merge(cell, {cell: cell.pointerdown ? cell.cell : group(), pointerover: 'drag', hoverCell: group(), idHover: 'Z', insideCell: true})"
+        },
+        {
+          "events": "@cellXY:pointerover, @cellXY:mouseover",
+          "consume": true,
+          "update": "merge(cell, {cell: cell.pointerdown ? cell.cell : group(), pointerover: 'cell', hoverCell: group(), idHover: 'XY', insideCell: true})"
+        },
+        {
+          "events": "@cellX:pointerover, @cellX:mouseover",
+          "consume": true,
+          "update": "merge(cell, {cell: cell.pointerdown ? cell.cell : group(), pointerover: 'cell', hoverCell: group(), idHover: 'X', insideCell: true})"
+        },
+        {
+          "events": "@cellY:pointerover, @cellY:mouseover",
+          "consume": true,
+          "update": "merge(cell, { cell: cell.pointerdown ? cell.cell : group(), pointerover: 'cell', hoverCell: group(), idHover: 'Y', insideCell: true})"
+        },
+        {
+          "events": "@cellZ:pointerover, @cellZ:mouseover",
+          "consume": true,
+          "update": "merge(cell, { pointerover: 'cell', hoverCell: group(), idHover: 'Z', insideCell: true})"
+        },
+        {
+          "events": "@cellXY:pointerout, @cellX:pointerout, @cellY:pointerout, @cellZ:pointerout, @drag:pointerout, @cellXY:mouseout, @cellX:mouseout, @cellY:mouseout, @cellZ:mouseout, @drag:mouseout",
+          "update": "merge(cell, { cell: cell.pointerdown ? cell.cell : null, idActive: cell.pointerdown ? cell.idActive : null, pointerover: 'idle', hoverCell: null, idHover: null, insideCell: false, idInteractive: cell.pointerdown ? cell.idInteractive : null, interactiveCell: cell.pointerdown ? cell.interactiveCell : null})"
+        },
+        {
+          "events": "@brushXY:pointerout, @brushXY:mouseout",
+          "update": "merge(cell, {pointerover: cell.hoverCell && x(cell.hoverCell) >= rX['XY'][0] && x(cell.hoverCell) <= rX['XY'][1] && y(cell.hoverCell) >= rY['XY'][0] && y(cell.hoverCell) <= rY['XY'][1] ? 'cell' : 'idle', hoverCell: x(cell.hoverCell) >= rX['XY'][0] && x(cell.hoverCell) <= rX['XY'][1] && y(cell.hoverCell) >= rY['XY'][0] && y(cell.hoverCell) <= rY['XY'][1] ? cell.hoverCell : null, idHover: x(cell.hoverCell) >= rX['XY'][0] && x(cell.hoverCell) <= rX['XY'][1] && y(cell.hoverCell) >= rY['XY'][0] && y(cell.hoverCell) <= rY['XY'][1] ? 'XY' : null, insideCell: cell.hoverCell && x(cell.hoverCell) >= rX['XY'][0] && x(cell.hoverCell) <= rX['XY'][1] && y(cell.hoverCell) >= rY['XY'][0] && y(cell.hoverCell) <= rY['XY'][1]})"
+        },
+        {
+          "events": "@brushX:pointerout, @brushX:mouseout",
+          "update": "merge(cell, {pointerover: cell.hoverCell && x(cell.hoverCell) >= rX['X'][0] && x(cell.hoverCell) <= rX['X'][1] && y(cell.hoverCell) >= rY['X'][0] && y(cell.hoverCell) <= rY['X'][1] ? 'cell' : 'idle', hoverCell: x(cell.hoverCell) >= rX['X'][0] && x(cell.hoverCell) <= rX['X'][1] && y(cell.hoverCell) >= rY['X'][0] && y(cell.hoverCell) <= rY['X'][1] ? cell.hoverCell : null, idHover: cell.hoverCell && x(cell.hoverCell) >= rX['X'][0] && x(cell.hoverCell) <= rX['X'][1] && y(cell.hoverCell) >= rY['X'][0] && y(cell.hoverCell) <= rY['X'][1] ? 'X' : null, insideCell: cell.hoverCell && x(cell.hoverCell) >= rX['X'][0] && x(cell.hoverCell) <= rX['X'][1] && y(cell.hoverCell) >= rY['X'][0] && y(cell.hoverCell) <= rY['X'][1]})"
+        },
+        {
+          "events": "@brushY:pointerout, @brushY:mouseout",
+          "update": "merge(cell, {pointerover: cell.hoverCell && x(cell.hoverCell) >= rX['Y'][0] && x(cell.hoverCell) <= rX['Y'][1] && y(cell.hoverCell) >= rY['Y'][0] && y(cell.hoverCell) <= rY['Y'][1] ? 'cell' : 'idle', hoverCell: x(cell.hoverCell) >= rX['Y'][0] && x(cell.hoverCell) <= rX['Y'][1] && y(cell.hoverCell) >= rY['Y'][0] && y(cell.hoverCell) <= rY['Y'][1] ? cell.hoverCell : null, idHover: cell.hoverCell && x(cell.hoverCell) >= rX['Y'][0] && x(cell.hoverCell) <= rX['Y'][1] && y(cell.hoverCell) >= rY['Y'][0] && y(cell.hoverCell) <= rY['Y'][1] ? 'Y' : null, insideCell: cell.hoverCell && x(cell.hoverCell) >= rX['Y'][0] && x(cell.hoverCell) <= rX['Y'][1] && y(cell.hoverCell) >= rY['Y'][0] && y(cell.hoverCell) <= rY['Y'][1]}) "
+        },
+        {
+          "events": "window:pointerup",
+          "update": "merge(cell, { brushX: cell.moveAfterDown == 'drag' ? (!isArray(cell.lastDragX) || span(cell.lastDragX) === 0 || !isArray(cell.lastDragY) || span(cell.lastDragY) === 0 ? cell.curX : cell.lastDragX) : (!isArray(cell.brushX) || span(cell.brushX) === 0 || !isArray(cell.brushY) || span(cell.brushY) === 0 ? cell.curX : cell.brushX), brushY: cell.moveAfterDown == 'drag' ? (!isArray(cell.lastDragX) || span(cell.lastDragX) === 0 || !isArray(cell.lastDragY) || span(cell.lastDragY) === 0 ? cell.curY : cell.lastDragY) : (!isArray(cell.brushX) || span(cell.brushX) === 0 || !isArray(cell.brushY) || span(cell.brushY) === 0 ? cell.curY : cell.brushY), isStartX: cell.moveAfterDown == 'drag' ? (!isArray(cell.lastDragX) || span(cell.lastDragX) === 0 || !isArray(cell.lastDragY) || span(cell.lastDragY) === 0) : ((!isArray(cell.brushX) || span(cell.brushX) === 0 || !isArray(cell.brushY) || span(cell.brushY) === 0) ? true : cell.isStartX), isStartY: cell.moveAfterDown == 'drag' ? (!isArray(cell.lastDragX) || span(cell.lastDragX) === 0 || !isArray(cell.lastDragY) || span(cell.lastDragY) === 0) : ((!isArray(cell.brushX) || span(cell.brushX) === 0 || !isArray(cell.brushY) || span(cell.brushY) === 0) ? true : cell.isStartY), isStartZ: cell.idActive === 'Z' ? !(!isArray(cell.lastDragX) || span(cell.lastDragX) === 0 || !isArray(cell.lastDragY) || span(cell.lastDragY) === 0) : cell.isStartZ, anchorBrushX: null, anchorBrushY: null, anchorCurX: null, anchorCurY: null, pointerdown: false, moveAfterDown: null, downPoint: null, downPointPixel: null, idActive: null, XYMode: cell.XYMode && cell.XYMode !== 'zoom' ? null : cell.XYMode, XMode: cell.XMode && cell.XMode !== 'zoom' ? null : cell.XMode, YMode: cell.YMode && cell.YMode !== 'zoom' ? null : cell.YMode, ZMode: cell.ZMode && cell.ZMode !== 'zoom' ? null : cell.ZMode, interpolateTime: cell.moveAfterDown == 'drag' ? (!isArray(cell.lastDragX) || span(cell.lastDragX) === 0 || !isArray(cell.lastDragY) || span(cell.lastDragY) === 0 ? cell.interpolateTime : [cell.time, cell.time + interpolateDelta]) : (!isArray(cell.brushX) || span(cell.brushX) === 0 || !isArray(cell.brushY) || span(cell.brushY) === 0 ? [cell.time, cell.time + interpolateDelta] : cell.interpolateTime), idInteractive: cell.moveAfterDown == 'drag' ? (!isArray(cell.lastDragX) || span(cell.lastDragX) === 0 || !isArray(cell.lastDragY) || span(cell.lastDragY) === 0 ? cell.idInteractive : null) : (!isArray(cell.brushX) || span(cell.brushX) === 0 || !isArray(cell.brushY) || span(cell.brushY) === 0 ? null : cell.idInteractive), interactiveCell: cell.moveAfterDown == 'drag' ? (!isArray(cell.lastDragX) || span(cell.lastDragX) === 0 || !isArray(cell.lastDragY) || span(cell.lastDragY) === 0 ? cell.interactiveCell : null) : (!isArray(cell.brushX) || span(cell.brushX) === 0 || !isArray(cell.brushY) || span(cell.brushY) === 0 ? null : cell.interactiveCell)})"
+        },
+        {
+          "events": "window:pointerup",
+          "update": "merge(cell, {x: cell.idInteractive ? x(cell.interactiveCell) : null, y: cell.idInteractive ? y(cell.interactiveCell) : null, })"
+        },
+        {
+          "events": "@brushXY:click",
+          "consume": true,
+          "update": "merge(cell, event.detail === 2 ? {curX: cell.brushX, curY: cell.brushY, dblclick: true, isStartX: true, isStartY: true, idInteractive: null, interactiveCell: null, interpolateTime: [cell.time, cell.time + interpolateDelta], x: null, y: null} : {})"
+        },
+        {
+          "events": "@brushX:click",
+          "consume": true,
+          "update": "merge(cell, event.detail === 2 ? {curX: cell.brushX, dblclick: true, isStartX: true, idInteractive: null, interactiveCell: null, interpolateTime: [cell.time, cell.time + interpolateDelta], x: null, y: null} : {})"
+        },
+        {
+          "events": "@brushY:click",
+          "consume": true,
+          "update": "merge(cell, event.detail === 2 ? {curY: cell.brushY, dblclick: true, isStartY: true, idInteractive: null, interactiveCell: null, interpolateTime: [cell.time, cell.time + interpolateDelta], x: null, y: null} : {})"
+        },
+        {
+          "events": "@drag:click",
+          "consume": true,
+          "update": "merge(cell, event.detail === 2 ? {brushX: cell.curX, brushY: cell.curY, dblclick: true, isStartX: true, isStartY: true, isStartZ: false, idInteractive: null, interactiveCell: null, interpolateTime: [cell.time, cell.time + interpolateDelta], x: null, y: null} : {})"
+        },
+        {
+          "events": "@cellXY:click",
+          "update": "merge(cell, event.detail === 2 ? {brushX: domX, brushY: domY, curX: domX, curY: domY, dblclick: true, isStartX: true, isStartY: true, isStartZ: false, idInteractive: null, interactiveCell: null, interpolateTime: [cell.time, cell.time + interpolateDelta], x: null, y: null} : {})"
+        },
+        {
+          "events": "@cellX:click",
+          "update": "merge(cell, event.detail === 2 ? {brushX: domX, curX: domX, dblclick: true, isStartX: true, isStartZ: false, idInteractive: null, interactiveCell: null, interpolateTime: [cell.time, cell.time + interpolateDelta], x: null, y: null} : {})"
+        },
+        {
+          "events": "@cellY:click",
+          "update": "merge(cell, event.detail === 2 ? {brushY: domY, curY: domY, dblclick: true, isStartY: true, isStartZ: false, idInteractive: null, interactiveCell: null, interpolateTime: [cell.time, cell.time + interpolateDelta], x: null, y: null} : {})"
+        },
+        {
+          "events": "click",
+          "update": "merge(cell, event.detail === 2 && cell.pointerover === 'idle' && !sizes.pointeroverArea ? { brushX: domX, brushY: domY, curX: domX, curY: domY, dblclick: true, isStartX: true, isStartY: true, isStartZ: false, idInteractive: null, interactiveCell: null, interpolateTime: [cell.time, cell.time + interpolateDelta], x: null, y: null} : {})"
+        },
+        {
+          "events": "@brushXY:dblclick",
+          "consume": true,
+          "update": "merge(cell, {curX: cell.brushX, curY: cell.brushY, dblclick: true, isStartX: true, isStartY: true, idInteractive: null, interactiveCell: null, interpolateTime: [cell.time, cell.time + interpolateDelta], x: null, y: null})"
+        },
+        {
+          "events": "@brushX:dblclick",
+          "consume": true,
+          "update": "merge(cell, {curX: cell.brushX, dblclick: true, isStartX: true, idInteractive: null, interactiveCell: null, interpolateTime: [cell.time, cell.time + interpolateDelta], x: null, y: null})"
+        },
+        {
+          "events": "@brushY:dblclick",
+          "consume": true,
+          "update": "merge(cell, {curY: cell.brushY, dblclick: true, isStartY: true, idInteractive: null, interactiveCell: null, interpolateTime: [cell.time, cell.time + interpolateDelta], x: null, y: null})"
+        },
+        {
+          "events": "@drag:dblclick",
+          "consume": true,
+          "update": "merge(cell, {brushX: cell.curX, brushY: cell.curY, dblclick: true, isStartX: true, isStartY: true, isStartZ: false, idInteractive: null, interactiveCell: null, interpolateTime: [cell.time, cell.time + interpolateDelta], x: null, y: null})"
+        },
+        {
+          "events": "@cellXY:dblclick",
+          "update": "merge(cell, {brushX: domX, brushY: domY, curX: domX, curY: domY, dblclick: true, isStartX: true, isStartY: true, isStartZ: false, idInteractive: null, interactiveCell: null, interpolateTime: [cell.time, cell.time + interpolateDelta], x: null, y: null})"
+        },
+        {
+          "events": "@cellX:dblclick",
+          "update": "merge(cell, {brushX: domX, curX: domX, dblclick: true, isStartX: true, isStartZ: false, idInteractive: null, interactiveCell: null, interpolateTime: [cell.time, cell.time + interpolateDelta], x: null, y: null})"
+        },
+        {
+          "events": "@cellY:dblclick",
+          "update": "merge(cell, {brushY: domY, curY: domY, dblclick: true, isStartY: true, isStartZ: false, idInteractive: null, interactiveCell: null, interpolateTime: [cell.time, cell.time + interpolateDelta], x: null, y: null})"
+        },
+        {
+          "events": "dblclick",
+          "update": "merge(cell, cell.pointerover === 'idle' && !sizes.pointeroverArea ? { brushX: domX, brushY: domY, curX: domX, curY: domY, dblclick: true, isStartX: true, isStartY: true, isStartZ: false, idInteractive: null, interactiveCell: null, interpolateTime: [cell.time, cell.time + interpolateDelta], x: null, y: null} : {})"
+        },
+        {
+          "events": "window:keydown",
+          "consume": true,
+          "update": "merge(cell, event.key === 'escape' || event.key === 'Escape' ? {brushX: domX, brushY: domY, curX: domX, curY: domY, dblclick: true, isStartX: true, isStartY: true, isStartZ: false, idInteractive: null, interactiveCell: null, interpolateTime: [cell.time, cell.time + interpolateDelta], x: null, y: null} : {})"
+        }
+      ]
+    },
+    {
+      "name": "textPaddingX",
+      "value": 3
+    },
+    {
+      "name": "textPaddingY",
+      "value": 5
+    },
+    {
+      "name": "x",
+      "update": "cell.x && cell.idInteractive ? clamp(cell.x, 0, cellMeta[cell.idInteractive].width) : null"
+    },
+    {
+      "name": "y",
+      "update": "cell.y && cell.idInteractive ? clamp(cell.y, 0, cellMeta[cell.idInteractive].height) : null"
+    },
+    {
+      "name": "xInScale",
+      "update": "isNumber(x) ? invert(cellMeta[cell.idInteractive].xscale, x) : null"
+    },
+    {
+      "name": "yInScale",
+      "update": "isNumber(y) ? invert(cellMeta[cell.idInteractive].yscale, y) : null"
+    },
+    {
+      "name": "xGlob",
+      "update": "cell.xGlob && cell.idInteractive ? clamp(cell.xGlob, cellMeta[cell.idInteractive].x_min_pos, cellMeta[cell.idInteractive].x_max_pos) : null"
+    },
+    {
+      "name": "yGlob",
+      "update": "cell.yGlob && cell.idInteractive ? clamp(cell.yGlob, cellMeta[cell.idInteractive].y_min_pos, cellMeta[cell.idInteractive].y_max_pos) : null"
+    },
+    {
+      "name": "interpolateTime",
+      "update": "cell.interpolateTime"
+    },
+    {
+      "name": "idInteractive",
+      "update": "cell.idInteractive"
+    },
+    {
+      "name": "time",
+      "update": "cell.time"
+    },
+    {
+      "name": "t",
+      "update": "interpolateTime ? clamp((time-interpolateTime[0])/span(interpolateTime), 0, 1): 1"
+    },
+    {
+      "name": "tEase",
+      "update": "t < 0.5 ? a * pow(t, n) + b * pow(t, 1 + alpha): 1 - (a * pow(1 - t, n) + b * pow(1 - t, 1 + alpha))"
+    },
+    {
+      "name": "brushX", 
+      "update": "span(cell.brushX) === 0 && curX ? [cell.brushX[0], cell.brushX[0] + minDelta * span(curX)] : (span(cell.brushX) ? cell.brushX : null)"
+    },
+    {
+      "name": "oldBrushX",
+      "on": [
+        {
+          "events": {"signal": "interpolateTime"},
+          "update": "interpolateTime ? interpolatedBrushX : brushX"
+        },
+        {
+          "events": {"signal": "time"},
+          "update": "interpolateTime ? oldBrushX : brushX"
+        }
+      ]
+    },
+    {
+      "name": "interpolatedBrushX",
+      "update": "interpolateTime && isArray(oldBrushX) && isArray(brushX) ? [lerp([oldBrushX[0], brushX[0]], tEase), lerp([oldBrushX[1], brushX[1]], tEase)] : brushX"
+    },
+    {
+      "name": "brushY", 
+      "update": "span(cell.brushY) === 0 && curY ? [cell.brushY[0], cell.brushY[0] + minDelta * span(cell.curY)] : (span(cell.brushY) ? cell.brushY : null)"
+    },
+    {
+      "name": "oldBrushY",
+      "on": [
+        {
+          "events": {"signal": "interpolateTime"},
+          "update": "interpolateTime ? interpolatedBrushY : brushY"
+        },
+        {
+          "events": {"signal": "time"},
+          "update": "interpolateTime ? oldBrushY : brushY"
+        }
+      ]
+    },
+    {
+      "name": "interpolatedBrushY",
+      "update": "interpolateTime && isArray(oldBrushY) && isArray(brushY) ? [lerp([oldBrushY[0], brushY[0]], tEase), lerp([oldBrushY[1], brushY[1]], tEase)] : brushY"
+    },
+    {
+      "name": "curX", 
+      "update": "span(cell.curX) ? cell.curX : null"
+    },
+    {
+      "name": "centerCurX",
+      "update": "isArray(curX) ? (curX[0]+curX[1])/2 : null"
+    },
+    {
+      "name": "logHalfSizeCurX",
+      "update": "isArray(curX) ? log(span(curX)/2) : null"
+    },
+    {
+      "name": "oldCurX",
+      "on": [
+        {
+          "events": {"signal": "interpolateTime"},
+          "update": "interpolateTime ? interpolatedCurX : curX"
+        },
+        {
+          "events": {"signal": "time"},
+          "update": "interpolateTime ? oldCurX : curX"
+        }
+      ]
+    },
+    {
+      "name": "centerOldCurX",
+      "update": "isArray(oldCurX) ? (oldCurX[0]+oldCurX[1])/2 : null"
+    },
+    {
+      "name": "logHalfSizeOldCurX",
+      "update": "isArray(oldCurX) ? log(span(oldCurX)/2) : null"
+    },
+    {
+      "name": "check6",
+      "update": "interpolateTime"
+    },
+    {
+      "name": "interpolatedCurX",
+      "update": "interpolateTime && isArray(oldCurX) && isArray(curX) ? [lerp([centerOldCurX,centerCurX],tEase)-exp(lerp([logHalfSizeOldCurX, logHalfSizeCurX], tEase)), lerp([centerOldCurX,centerCurX],tEase)+exp(lerp([logHalfSizeOldCurX, logHalfSizeCurX], tEase))] : curX"
+    },
+    {
+      "name": "curY", 
+      "update": "span(cell.curY) ? cell.curY : null"
+    },
+    {
+      "name": "centerCurY",
+      "update": "isArray(curY) ? (curY[0]+curY[1])/2 : null"
+    },
+    {
+      "name": "logHalfSizeCurY",
+      "update": "isArray(curY) ? log(span(curY)/2) : null"
+    },
+    {
+      "name": "oldCurY",
+      "on": [
+        {
+          "events": {"signal": "interpolateTime"},
+          "update": "interpolateTime ? interpolatedCurY : curY"
+        },
+        {
+          "events": {"signal": "time"},
+          "update": "interpolateTime ? oldCurY : curY"
+        }
+      ]
+    },
+    {
+      "name": "centerOldCurY",
+      "update": "isArray(oldCurY) ? (oldCurY[0]+oldCurY[1])/2 : null"
+    },
+    {
+      "name": "logHalfSizeOldCurY",
+      "update": "isArray(oldCurY) ? log(span(oldCurY)/2) : null"
+    },
+    {
+      "name": "interpolatedCurY",
+      "update": "interpolateTime && isArray(oldCurY) && isArray(curY) ? [lerp([centerOldCurY,centerCurY], tEase)-exp(lerp([logHalfSizeOldCurY, logHalfSizeCurY], tEase)), lerp([centerOldCurY,centerCurY], tEase)+exp(lerp([logHalfSizeOldCurY, logHalfSizeCurY], tEase))] : curY"
+    },
+    {
+      "name": "existsBrushX",
+      "update": "isArray(brushX)"
+    },
+    {
+      "name": "interpolatedExistsBrushX",
+      "update": "isArray(interpolatedBrushX)"
+    },
+    {
+      "name": "existsBrushY",
+      "update": "isArray(brushY)"
+    },
+    {
+      "name": "interpolatedExistsBrushY",
+      "update": "isArray(interpolatedBrushY)"
+    },
+    {
+      "name": "lastDragX",
+      "value": null,
+      "update": "cell.lastDragX"
+    },
+    {
+      "name": "lastDragY",
+      "value": null,
+      "update": "cell.lastDragY"
+    },
+    {
+      "name": "existsLastDragX",
+      "update": "isArray(lastDragX)"
+    },
+    {
+      "name": "existsLastDragY",
+      "update": "isArray(lastDragY)"
+    },
+    {
+      "name": "emptyLastDragX",
+      "update": "!existsLastDragX || span(lastDragX) === 0"
+    },
+    {
+      "name": "emptyLastDragY",
+      "update": "!existsLastDragY || span(lastDragY) === 0"
+    },
+    {
+      "name": "emptyLastDrag",
+      "update": "emptyLastDragX || emptyLastDragY"
+    },
+    {
+      "name": "Datum",
+      "update": "cell.cell && cell.idActive && cellMeta[cell.idActive]"
+    },
+    {
+      "name": "isStartX",
+      "update": "cell.isStartX"
+    },
+    {
+      "name": "oldIsStartX",
+      "on": [
+        {
+          "events": {"signal": "interpolateTime"},
+          "update": "interpolateTime ? interpolatedIsStartX : isStartX"
+        },
+        {
+          "events": {"signal": "time"},
+          "update": "interpolateTime ? oldIsStartX : isStartX"
+        }
+      ]
+    },
+    {
+      "name": "interpolatedIsStartX",
+      "update": "interpolateTime ? (time >= interpolateTime[1] ? isStartX : false) : isStartX"
+    },
+    {
+      "name": "isStartY",
+      "update": "cell.isStartY"
+    },
+    {
+      "name": "oldIsStartY",
+      "on": [
+        {
+          "events": {"signal": "interpolateTime"},
+          "update": "interpolateTime ? interpolatedIsStartY : isStartY"
+        },
+        {
+          "events": {"signal": "time"},
+          "update": "interpolateTime ? oldIsStartY : isStartY"
+        }
+      ]
+    },
+    {
+      "name": "interpolatedIsStartY",
+      "update": "interpolateTime ? (time >= interpolateTime[1] ? isStartY : false) : isStartY"
+    },
+    {
+      "name": "isStartZ",
+      "update": "cell.isStartZ"
+    },
+    {
+      "name": "oldIsStartZ",
+      "on": [
+        {
+          "events": {"signal": "interpolateTime"},
+          "update": "interpolateTime ? interpolatedIsStartZ : isStartZ"
+        },
+        {
+          "events": {"signal": "time"},
+          "update": "interpolateTime ? oldIsStartZ : isStartZ"
+        }
+      ]
+    },
+    {
+      "name": "interpolatedIsStartZ",
+      "update": "interpolateTime ? (time >= interpolateTime[1] ? isStartZ : oldIsStartZ) : isStartZ"
+    },
+    {
+      "name": "isStart",
+      "update": "isStartX && isStartY"
+    },
+    {
+      "name": "interpolatedIsStart",
+      "update": "interpolatedIsStartX && interpolatedIsStartY"
+    },
+    {
+      "name": "hoverDatum",
+      "update": "cell.idHover && cellMeta[cell.idHover]"
+    },
+    {
+      "name": "isMovingBrush",
+      "update": "cell.XYMode === 'brushMove' || cell.XMode === 'brushMove' || cell.YMode === 'brushMove'"
+    },
+    {
+      "name": "isPanning",
+      "update": "cell.XYMode === 'pan' || cell.XMode === 'pan' || cell.YMode === 'pan' || cell.ZMode === 'pan'"
+    },
+    {
+      "name": "isZoomingIn",
+      "update": "cell && (cell.XYMode === 'zoom' || cell.XMode === 'zoom' || cell.YMode === 'zoom' || cell.ZMode === 'zoom') && cell.zoom < 1.0"
+    },
+    {
+      "name": "isZoomingOut",
+      "update": "cell && (cell.XYMode === 'zoom' || cell.XMode === 'zoom' || cell.YMode === 'zoom' || cell.ZMode === 'zoom') && cell.zoom > 1.0"
+    },
+    {
+      "name": "cursor", "value": "'default'",
+      "update": "sizes.pointerdown ? (sizes.grabbing ? 'grabbing' : 'pointer') : (sizes.pointerover && !cell.pointerdown ? (sizes.pointerover === 'XY' && oldStateSizes !== 'Z' ? 'grab' : 'pointer') : (cell.pointerdown && cell.moveAfterDown && Datum ? (cell.moveAfterDown === 'brushMove' || isPanning ? 'move' : Datum.brushingCursor) : (isZoomingIn ? 'zoom-in' : (isZoomingOut ? 'zoom-out' : (!cell.pointerdown ? (cell.pointerover === 'brush' ? 'move' : (hoverDatum ? hoverDatum.brushingCursor : 'default')) : (Datum ? (cell.pointerover === 'brush' || isPanning ? 'move' : Datum.brushingCursor) : 'default'))))))"
+    },
+    {
+      "name": "minDelta",
+      "update": "pow(10, -maxResolution)"
+    },
+    {
+      "name": "domX",
+      "update": "span(extent(pluck(data('main_data'), XName))) ? extent(pluck(data('main_data'), XName)) : null"
+    },
+    {
+      "name": "domY",
+      "update": "span(extent(pluck(data('main_data'), YName))) ? extent(pluck(data('main_data'), YName)) : null"
+    },
+    {
+      "name": "domXZoom",
+      "update": "existsBrushX ? brushX : curX"
+    },
+    {
+      "name": "interpolatedDomXZoom",
+      "update": "interpolatedExistsBrushX ? interpolatedBrushX : interpolatedCurX"
+    },
+    {
+      "name": "domYZoom",
+      "update": "existsBrushY ? brushY : curY"
+    },
+    {
+      "name": "interpolatedDomYZoom",
+      "update": "interpolatedExistsBrushY ? interpolatedBrushY : interpolatedCurY"
+    },
+    {
+      "name": "powsRange",
+      "value": 100
+    },
+    {
+      "name": "symbolPixels",
+      "value": 5.375
+    },
+    {
+      "name": "dotPixels",
+      "value": 2
+    },
+    {
+      "name": "minusPixels",
+      "value": 6
+    },
+    {
+      "name": "symbolPixelsForPrompt",
+      "value": 7
+    },
+    {
+      "name": "dotPixelsForPrompt",
+      "value": 2
+    },
+    {
+      "name": "minusPixelsForPrompt",
+      "value": 6
+    },
+    {
+      "name": "minDistance",
+      "value": 6
+    },
+    {
+      "name": "digits_before_dot_left_count",
+      "update": "curX ? (curX[0] === 0 ? 0 : max(1, floor(log(abs(curX[0]))/log(10)+1))) : 0"
+    },
+    {
+      "name": "digits_before_dot_left",
+      "update": "digits_before_dot_left_count * symbolPixels"
+    },
+    {
+      "name": "interpolated_digits_before_dot_left",
+      "update": "interpolatedCurX ? (interpolatedCurX[0] === 0 ? 0 : max(1, floor(log(abs(interpolatedCurX[0]))/log(10)+1)) * symbolPixels) : 0"
+    },
+    {
+      "name": "digits_before_dot_right_count",
+      "update": "curX ? (curX[1] === 0 ? 0 : max(1, floor(log(abs(curX[1]))/log(10)+1))) : 0"
+    },
+    {
+      "name": "digits_before_dot_right",
+      "update": "digits_before_dot_right_count * symbolPixels"
+    },
+    {
+      "name": "interpolated_digits_before_dot_right",
+      "update": "interpolatedCurX ? (interpolatedCurX[1] === 0 ? 0 : max(1, floor(log(abs(interpolatedCurX[1]))/log(10)+1)) * symbolPixels) : 0"
+    },
+    {
+      "name": "digits_before_dot_left_zoom_count",
+      "update": "domXZoom ? (domXZoom[0] === 0 ? 0 : max(1, floor(log(abs(domXZoom[0]))/log(10)+1))) : 0"
+    },
+    {
+      "name": "digits_before_dot_left_zoom",
+      "update": "digits_before_dot_left_zoom_count * symbolPixels"
+    },
+    {
+      "name": "interpolated_digits_before_dot_left_zoom",
+      "update": "interpolatedDomXZoom ? (interpolatedDomXZoom[0] === 0 ? 0 : max(1, floor(log(abs(interpolatedDomXZoom[0]))/log(10)+1)) * symbolPixels) : 0"
+    },
+    {
+      "name": "digits_before_dot_right_zoom_count",
+      "update": "domXZoom ? (domXZoom[1] === 0 ? 0 : max(1, floor(log(abs(domXZoom[1]))/log(10)+1))) : 0"
+    },
+    {
+      "name": "digits_before_dot_right_zoom",
+      "update": "digits_before_dot_right_zoom_count * symbolPixels"
+    },
+    {
+      "name": "interpolated_digits_before_dot_right_zoom",
+      "update": "interpolatedDomXZoom ? (interpolatedDomXZoom[1] === 0 ? 0 : max(1, floor(log(abs(interpolatedDomXZoom[1]))/log(10)+1)) * symbolPixels) : 0"
+    },
+    {
+      "name": "digits_before_dot_count",
+      "update": "max(digits_before_dot_right_count, digits_before_dot_left_count)"
+    },
+    {
+      "name": "y_digits_before_dot_left_count",
+      "update": "curY ? (curY[0] === 0 ? 0 : max(1, floor(log(abs(curY[0]))/log(10)+1))) : 0"
+    },
+    {
+      "name": "y_digits_before_dot_left",
+      "update": "y_digits_before_dot_left_count * symbolPixels"
+    },
+    {
+      "name": "y_interpolated_digits_before_dot_left",
+      "update": "interpolatedCurY ? (interpolatedCurY[0] === 0 ? 0 : max(1, floor(log(abs(interpolatedCurY[0]))/log(10)+1)) * symbolPixels) : 0"
+    },
+    {
+      "name": "y_digits_before_dot_right_count",
+      "update": "curY ? (curY[1] === 0 ? 0 : max(1, floor(log(abs(curY[1]))/log(10)+1))) : 0"
+    },
+    {
+      "name": "y_digits_before_dot_right",
+      "update": "y_digits_before_dot_right_count * symbolPixels"
+    },
+    {
+      "name": "y_interpolated_digits_before_dot_right",
+      "update": "interpolatedCurY ? (interpolatedCurY[1] === 0 ? 0 : max(1, floor(log(abs(interpolatedCurY[1]))/log(10)+1)) * symbolPixels) : 0"
+    },
+    {
+      "name": "y_digits_before_dot_left_zoom_count",
+      "update": "domYZoom ? (domYZoom[0] === 0 ? 0 : max(1, floor(log(abs(domYZoom[0]))/log(10)+1))) : 0"
+    },
+    {
+      "name": "y_digits_before_dot_left_zoom",
+      "update": "y_digits_before_dot_left_zoom_count * symbolPixels"
+    },
+    {
+      "name": "y_interpolated_digits_before_dot_left_zoom",
+      "update": "interpolatedDomYZoom ? (interpolatedDomYZoom[0] === 0 ? 0 : max(1, floor(log(abs(interpolatedDomYZoom[0]))/log(10)+1)) * symbolPixels) : 0"
+    },
+    {
+      "name": "y_digits_before_dot_right_zoom_count",
+      "update": "domYZoom ? (domYZoom[1] === 0 ? 0 : max(1, floor(log(abs(domYZoom[1]))/log(10)+1))) : 0"
+    },
+    {
+      "name": "y_digits_before_dot_right_zoom",
+      "update": "y_digits_before_dot_right_zoom_count * symbolPixels"
+    },
+    {
+      "name": "y_interpolated_digits_before_dot_right_zoom",
+      "update": "interpolatedDomYZoom ? (interpolatedDomYZoom[1] === 0 ? 0 : max(1, floor(log(abs(interpolatedDomYZoom[1]))/log(10)+1)) * symbolPixels) : 0"
+    },
+    {
+      "name": "y_digits_before_dot_count",
+      "update": "max(y_digits_before_dot_right_count, y_digits_before_dot_left_count)"
+    },
+    {
+      "name": "worst_F_dist",
+      "update": "curX ? ((curX[0] >= 0 ? digits_before_dot_right : (curX[1] <= 0 ? digits_before_dot_left + minusPixels : max(digits_before_dot_right, digits_before_dot_left + minusPixels))) + minDistance) : 0"
+    },
+    {
+      "name": "interpolated_worst_F_dist",
+      "update": "interpolatedCurX ? ((interpolatedCurX[0] >= 0 ? interpolated_digits_before_dot_right : (interpolatedCurX[1] <= 0 ? interpolated_digits_before_dot_left + minusPixels : max(interpolated_digits_before_dot_right, interpolated_digits_before_dot_left + minusPixels))) + minDistance) : 0"
+    },
+    {
+      "name": "digits_before_dot_zoom_count",
+      "update": "max(digits_before_dot_right_zoom, digits_before_dot_left_zoom)"
+    },
+    {
+      "name": "worst_F_dist_zoom",
+      "update": "domXZoom ? ((domXZoom[0] >= 0 ? digits_before_dot_right_zoom : (domXZoom[1] <= 0 ? digits_before_dot_left_zoom + minusPixels : max(digits_before_dot_right_zoom, digits_before_dot_left_zoom + minusPixels))) + minDistance) : 0"
+    },
+    {
+      "name": "interpolated_worst_F_dist_zoom",
+      "update": "interpolatedDomXZoom ? ((interpolatedDomXZoom[0] >= 0 ? interpolated_digits_before_dot_right_zoom : (interpolatedDomXZoom[1] <= 0 ? interpolated_digits_before_dot_left_zoom + minusPixels : max(interpolated_digits_before_dot_right_zoom, interpolated_digits_before_dot_left_zoom + minusPixels))) + minDistance) : 0"
+    },
+    {
+      "name": "y_worst_F",
+      "update": "curY ? (curY[0] >= 0 ? y_digits_before_dot_right : (curY[1] <= 0 ? y_digits_before_dot_left + minusPixels : max(y_digits_before_dot_right, y_digits_before_dot_left + minusPixels))) : 0"
+    },
+    {
+      "name": "y_interpolated_worst_F",
+      "update": "interpolatedCurY ? (interpolatedCurY[0] >= 0 ? y_interpolated_digits_before_dot_right : (interpolatedCurY[1] <= 0 ? y_interpolated_digits_before_dot_left + minusPixels : max(y_interpolated_digits_before_dot_right, y_interpolated_digits_before_dot_left + minusPixels))) : 0"
+    },
+    {
+      "name": "y_worst_F_zoom",
+      "update": "domYZoom ? (domYZoom[0] >= 0 ? y_digits_before_dot_right_zoom : (domYZoom[1] <= 0 ? y_digits_before_dot_left_zoom + minusPixels : max(y_digits_before_dot_right_zoom, y_digits_before_dot_left_zoom + minusPixels))) : 0"
+    },
+    {
+      "name": "y_interpolated_worst_F_zoom",
+      "update": "interpolatedDomYZoom ? (interpolatedDomYZoom[0] >= 0 ? y_interpolated_digits_before_dot_right_zoom : (interpolatedDomYZoom[1] <= 0 ? y_interpolated_digits_before_dot_left_zoom + minusPixels : max(y_interpolated_digits_before_dot_right_zoom, y_interpolated_digits_before_dot_left_zoom + minusPixels))) : 0"
+    },
+    {
+      "name": "best_pos_X",
+      "update": "curX ? (log(worst_F_dist)-log(XSize[0]/span(curX)))/log(10) : 0"
+    },
+    {
+      "name": "interpolated_best_pos_X",
+      "update": "interpolatedCurX ? (log(interpolated_worst_F_dist)-log(XSize[0]/span(interpolatedCurX)))/log(10) : 0"
+    },
+    {
+      "name": "best_pos_XD",
+      "update": "curX ? (log(worst_F_dist)-log(XSize[1]/span(curX)))/log(10) : 0"
+    },
+    {
+      "name": "interpolated_best_pos_XD",
+      "update": "interpolatedCurX ? (log(interpolated_worst_F_dist)-log(XSize[1]/span(interpolatedCurX)))/log(10) : 0"
+    },
+    {
+      "name": "best_pos_XZ",
+      "update": "domXZoom ? (log(worst_F_dist_zoom)-log(XSize[1]/span(domXZoom)))/log(10) : 0"
+    },
+    {
+      "name": "interpolated_best_pos_XZ",
+      "update": "interpolatedDomXZoom ? (log(interpolated_worst_F_dist_zoom)-log(XSize[1]/span(interpolatedDomXZoom)))/log(10) : 0"
+    },
+    {
+      "name": "pos_X_k",
+      "update": "best_pos_X <= 0 ? 1 : scale('thresh1', -1 + ceil(best_pos_X) - best_pos_X)"
+    },
+    {
+      "name": "interpolated_pos_X_k",
+      "update": "interpolated_best_pos_X <= 0 ? 1 : scale('thresh1', -1 + ceil(interpolated_best_pos_X) - interpolated_best_pos_X)"
+    },
+    {
+      "name": "pos_XD_k",
+      "update": "best_pos_XD <= 0 ? 1 : scale('thresh1', -1 + ceil(best_pos_XD) - best_pos_XD)"
+    },
+    {
+      "name": "interpolated_pos_XD_k",
+      "update": "interpolated_best_pos_XD <= 0 ? 1 : scale('thresh1', -1 + ceil(interpolated_best_pos_XD) - interpolated_best_pos_XD)"
+    },
+    {
+      "name": "pos_XZ_k",
+      "update": "best_pos_XZ <= 0 ? 1 : scale('thresh1', -1 + ceil(best_pos_XZ) - best_pos_XZ)"
+    },
+    {
+      "name": "interpolated_pos_XZ_k",
+      "update": "interpolated_best_pos_XZ <= 0 ? 1 : scale('thresh1', -1 + ceil(interpolated_best_pos_XZ) - interpolated_best_pos_XZ)"
+    },
+    {
+      "name": "pos_X_t",
+      "update": "best_pos_X <= 0 ? 0 : (pos_X_k === 1 ? ceil(best_pos_X) : floor(best_pos_X))"
+    },
+    {
+      "name": "interpolated_pos_X_t",
+      "update": "interpolated_best_pos_X <= 0 ? 0 : (interpolated_pos_X_k === 1 ? ceil(interpolated_best_pos_X) : floor(interpolated_best_pos_X))"
+    },
+    {
+      "name": "pos_XD_t",
+      "update": "best_pos_XD <= 0 ? 0 : (pos_XD_k === 1 ? ceil(best_pos_XD) : floor(best_pos_XD))"
+    },
+    {
+      "name": "interpolated_pos_XD_t",
+      "update": "interpolated_best_pos_XD <= 0 ? 0 : (interpolated_pos_XD_k === 1 ? ceil(interpolated_best_pos_XD) : floor(interpolated_best_pos_XD))"
+    },
+    {
+      "name": "pos_XZ_t",
+      "update": "best_pos_XZ <= 0 ? 0 : (pos_XZ_k === 1 ? ceil(best_pos_XZ) : floor(best_pos_XZ))"
+    },
+    {
+      "name": "interpolated_pos_XZ_t",
+      "update": "interpolated_best_pos_XZ <= 0 ? 0 : (interpolated_pos_XZ_k === 1 ? ceil(interpolated_best_pos_XZ) : floor(interpolated_best_pos_XZ))"
+    },
+    {
+      "name": "pos_X",
+      "update": "[pos_X_k, pos_X_t]"
+    },
+    {
+      "name": "interpolated_pos_X",
+      "update": "[interpolated_pos_X_k, interpolated_pos_X_t]"
+    },
+    {
+      "name": "pos_XD",
+      "update": "[pos_XD_k, pos_XD_t]"
+    },
+    {
+      "name": "interpolated_pos_XD",
+      "update": "[interpolated_pos_XD_k, interpolated_pos_XD_t]"
+    },
+    {
+      "name": "pos_XZ",
+      "update": "[pos_XZ_k, pos_XZ_t]"
+    },
+    {
+      "name": "interpolated_pos_XZ",
+      "update": "[interpolated_pos_XZ_k, interpolated_pos_XZ_t]"
+    },
+    {
+      "name": "alpha_neg_X",
+      "update": "curX ? log(XSize[0]/span(curX))/log(10) : 0"
+    },
+    {
+      "name": "interpolated_alpha_neg_X",
+      "update": "interpolatedCurX ? log(XSize[0]/span(interpolatedCurX))/log(10) : 0"
+    },
+    {
+      "name": "alpha_neg_XD",
+      "update": "curX ? log(XSize[1]/span(curX))/log(10) : 0"
+    },
+    {
+      "name": "interpolated_alpha_neg_XD",
+      "update": "interpolatedCurX ? log(XSize[1]/span(interpolatedCurX))/log(10) : 0"
+    },
+    {
+      "name": "alpha_neg_XZ",
+      "update": "domXZoom ? log(XSize[1]/span(domXZoom))/log(10) : 0"
+    },
+    {
+      "name": "interpolated_alpha_neg_XZ",
+      "update": "interpolatedDomXZoom ? log(XSize[1]/span(interpolatedDomXZoom))/log(10) : 0"
+    },
+    {
+      "name": "best_neg_X",
+      "update": "worst_F_dist + alpha_neg_X * symbolPixels + minusPixels"
+    },
+    {
+      "name": "interpolated_best_neg_X",
+      "update": "interpolated_worst_F_dist + interpolated_alpha_neg_X * symbolPixels + minusPixels"
+    },
+    {
+      "name": "best_neg_XD",
+      "update": "worst_F_dist + alpha_neg_XD * symbolPixels + minusPixels"
+    },
+    {
+      "name": "interpolated_best_neg_XD",
+      "update": "interpolated_worst_F_dist + interpolated_alpha_neg_XD * symbolPixels + minusPixels"
+    },
+    {
+      "name": "best_neg_XZ",
+      "update": "worst_F_dist_zoom + alpha_neg_XZ * symbolPixels + minusPixels"
+    },
+    {
+      "name": "interpolated_best_neg_XZ",
+      "update": "interpolated_worst_F_dist_zoom + interpolated_alpha_neg_XZ * symbolPixels + minusPixels"
+    },
+    {
+      "name": "neg_X_suppose",
+      "update": "[scale('thresh2_base', -best_neg_X), scale('thresh2_pow', -best_neg_X) - alpha_neg_X]"
+    },
+    {
+      "name": "interpolated_neg_X_suppose",
+      "update": "[scale('thresh2_base', -interpolated_best_neg_X), scale('thresh2_pow', -interpolated_best_neg_X) - interpolated_alpha_neg_X]"
+    },
+    {
+      "name": "neg_XD_suppose",
+      "update": "[scale('thresh2_base', -best_neg_XD), scale('thresh2_pow', -best_neg_XD) - alpha_neg_XD]"
+    },
+    {
+      "name": "interpolated_neg_XD_suppose",
+      "update": "[scale('thresh2_base', -interpolated_best_neg_XD), scale('thresh2_pow', -interpolated_best_neg_XD) - interpolated_alpha_neg_XD]"
+    },
+    {
+      "name": "neg_XZ_suppose",
+      "update": "[scale('thresh2_base', -best_neg_XZ), scale('thresh2_pow', -best_neg_XZ) - alpha_neg_XZ]"
+    },
+    {
+      "name": "interpolated_neg_XZ_suppose",
+      "update": "[scale('thresh2_base', -interpolated_best_neg_XZ), scale('thresh2_pow', -interpolated_best_neg_XZ) - interpolated_alpha_neg_XZ]"
+    },
+    {
+      "name": "z1_neg_X",
+      "update": "floor(neg_X_suppose[1]) + alpha_neg_X"
+    },
+    {
+      "name": "interpolated_z1_neg_X",
+      "update": "floor(interpolated_neg_X_suppose[1]) + interpolated_alpha_neg_X"
+    },
+    {
+      "name": "z2_neg_X",
+      "update": "ceil(neg_X_suppose[1]) + alpha_neg_X"
+    },
+    {
+      "name": "interpolated_z2_neg_X",
+      "update": "ceil(interpolated_neg_X_suppose[1]) + interpolated_alpha_neg_X"
+    },
+    {
+      "name": "z1_neg_XD",
+      "update": "floor(neg_XD_suppose[1]) + alpha_neg_XD"
+    },
+    {
+      "name": "interpolated_z1_neg_XD",
+      "update": "floor(interpolated_neg_XD_suppose[1]) + interpolated_alpha_neg_XD"
+    },
+    {
+      "name": "z2_neg_XD",
+      "update": "ceil(neg_XD_suppose[1]) + alpha_neg_XD"
+    },
+    {
+      "name": "interpolated_z2_neg_XD",
+      "update": "ceil(interpolated_neg_XD_suppose[1]) + interpolated_alpha_neg_XD"
+    },
+    {
+      "name": "z1_neg_XZ",
+      "update": "floor(neg_XZ_suppose[1]) + alpha_neg_XZ"
+    },
+    {
+      "name": "interpolated_z1_neg_XZ",
+      "update": "floor(interpolated_neg_XZ_suppose[1]) + interpolated_alpha_neg_XZ"
+    },
+    {
+      "name": "z2_neg_XZ",
+      "update": "ceil(neg_XZ_suppose[1]) + alpha_neg_XZ"
+    },
+    {
+      "name": "interpolated_z2_neg_XZ",
+      "update": "ceil(interpolated_neg_XZ_suppose[1]) + interpolated_alpha_neg_XZ"
+    },
+    {
+      "name": "z_neg_X",
+      "update": "5 * pow(10, z1_neg_X) + z1_neg_X * symbolPixels >= best_neg_X ? [(2 * pow(10, z1_neg_X) + z1_neg_X * symbolPixels >= best_neg_X ? (pow(10, z1_neg_X) + z1_neg_X * symbolPixels >= best_neg_X ? 1 : 2) : 5), z1_neg_X] : [(2 * pow(10, z2_neg_X) + z2_neg_X * symbolPixels >= best_neg_X ? (pow(10, z2_neg_X) + z2_neg_X * symbolPixels >= best_neg_X ? 1 : 2) : 5), z2_neg_X]"
+    },
+    {
+      "name": "interpolated_z_neg_X",
+      "update": "5 * pow(10, interpolated_z1_neg_X) + interpolated_z1_neg_X * symbolPixels >= interpolated_best_neg_X ? [(2 * pow(10, interpolated_z1_neg_X) + interpolated_z1_neg_X * symbolPixels >= interpolated_best_neg_X ? (pow(10, interpolated_z1_neg_X) + interpolated_z1_neg_X * symbolPixels >= interpolated_best_neg_X ? 1 : 2) : 5), interpolated_z1_neg_X] : [(2 * pow(10, interpolated_z2_neg_X) + interpolated_z2_neg_X * symbolPixels >= interpolated_best_neg_X ? (pow(10, interpolated_z2_neg_X) + interpolated_z2_neg_X * symbolPixels >= interpolated_best_neg_X ? 1 : 2) : 5), interpolated_z2_neg_X]"
+    },
+    {
+      "name": "z_neg_XD",
+      "update": "5 * pow(10, z1_neg_XD) + z1_neg_XD * symbolPixels >= best_neg_XD ? [(2 * pow(10, z1_neg_XD) + z1_neg_XD * symbolPixels >= best_neg_XD ? (pow(10, z1_neg_XD) + z1_neg_XD * symbolPixels >= best_neg_XD ? 1 : 2) : 5), z1_neg_XD] : [(2 * pow(10, z2_neg_XD) + z2_neg_XD * symbolPixels >= best_neg_XD ? (pow(10, z2_neg_XD) + z2_neg_XD * symbolPixels >= best_neg_XD ? 1 : 2) : 5), z2_neg_XD]"
+    },
+    {
+      "name": "interpolated_z_neg_XD",
+      "update": "5 * pow(10, interpolated_z1_neg_XD) + interpolated_z1_neg_XD * symbolPixels >= interpolated_best_neg_XD ? [(2 * pow(10, interpolated_z1_neg_XD) + interpolated_z1_neg_XD * symbolPixels >= interpolated_best_neg_XD ? (pow(10, interpolated_z1_neg_XD) + interpolated_z1_neg_XD * symbolPixels >= interpolated_best_neg_XD ? 1 : 2) : 5), interpolated_z1_neg_XD] : [(2 * pow(10, interpolated_z2_neg_XD) + interpolated_z2_neg_XD * symbolPixels >= interpolated_best_neg_XD ? (pow(10, interpolated_z2_neg_XD) + interpolated_z2_neg_XD * symbolPixels >= interpolated_best_neg_XD ? 1 : 2) : 5), interpolated_z2_neg_XD]"
+    },
+    {
+      "name": "z_neg_XZ",
+      "update": "5 * pow(10, z1_neg_XZ) + z1_neg_XZ * symbolPixels >= best_neg_XZ ? [(2 * pow(10, z1_neg_XZ) + z1_neg_XZ * symbolPixels >= best_neg_XZ ? (pow(10, z1_neg_XZ) + z1_neg_XZ * symbolPixels >= best_neg_XZ ? 1 : 2) : 5), z1_neg_XZ] : [(2 * pow(10, z2_neg_XZ) + z2_neg_XZ * symbolPixels >= best_neg_XZ ? (pow(10, z2_neg_XZ) + z2_neg_XZ * symbolPixels >= best_neg_XZ ? 1 : 2) : 5), z2_neg_XZ]"
+    },
+    {
+      "name": "interpolated_z_neg_XZ",
+      "update": "5 * pow(10, interpolated_z1_neg_XZ) + interpolated_z1_neg_XZ * symbolPixels >= interpolated_best_neg_XZ ? [(2 * pow(10, interpolated_z1_neg_XZ) + interpolated_z1_neg_XZ * symbolPixels >= interpolated_best_neg_XZ ? (pow(10, interpolated_z1_neg_XZ) + interpolated_z1_neg_XZ * symbolPixels >= interpolated_best_neg_XZ ? 1 : 2) : 5), interpolated_z1_neg_XZ] : [(2 * pow(10, interpolated_z2_neg_XZ) + interpolated_z2_neg_XZ * symbolPixels >= interpolated_best_neg_XZ ? (pow(10, interpolated_z2_neg_XZ) + interpolated_z2_neg_XZ * symbolPixels >= interpolated_best_neg_XZ ? 1 : 2) : 5), interpolated_z2_neg_XZ]"
+    },
+    {
+      "name": "neg_X",
+      "update": "[z_neg_X[0], z_neg_X[1] - alpha_neg_X]"
+    },
+    {
+      "name": "interpolated_neg_X",
+      "update": "[interpolated_z_neg_X[0], interpolated_z_neg_X[1] - interpolated_alpha_neg_X]"
+    },
+    {
+      "name": "neg_XD",
+      "update": "[z_neg_XD[0], z_neg_XD[1] - alpha_neg_XD]"
+    },
+    {
+      "name": "interpolated_neg_XD",
+      "update": "[interpolated_z_neg_XD[0], interpolated_z_neg_XD[1] - interpolated_alpha_neg_XD]"
+    },
+    {
+      "name": "neg_XZ",
+      "update": "[z_neg_XZ[0], z_neg_XZ[1] - alpha_neg_XZ]"
+    },
+    {
+      "name": "interpolated_neg_XZ",
+      "update": "[interpolated_z_neg_XZ[0], interpolated_z_neg_XZ[1] - interpolated_alpha_neg_XZ]"
+    },
+    {
+      "name": "X",
+      "update": "neg_X[1] < 0 ? neg_X : pos_X"
+    },
+    {
+      "name": "interpolated_X",
+      "update": "interpolated_neg_X[1] < 0 ? interpolated_neg_X : interpolated_pos_X"
+    },
+    {
+      "name": "XD",
+      "update": "neg_XD[1] < 0 ? neg_XD : pos_XD"
+    },
+    {
+      "name": "interpolated_XD",
+      "update": "interpolated_neg_XD[1] < 0 ? interpolated_neg_XD : interpolated_pos_XD"
+    },
+    {
+      "name": "XZ",
+      "update": "neg_XZ[1] < 0 ? neg_XZ : pos_XZ"
+    },
+    {
+      "name": "interpolated_XZ",
+      "update": "interpolated_neg_XZ[1] < 0 ? interpolated_neg_XZ : interpolated_pos_XZ"
+    },
+    {
+      "name": "X_step",
+      "update": "X[0] * pow(10, X[1])"
+    },
+    {
+      "name": "interpolated_X_step",
+      "update": "interpolated_X[0] * pow(10, interpolated_X[1])"
+    },
+    {
+      "name": "XD_step",
+      "update": "XD[0] * pow(10, XD[1])"
+    },
+    {
+      "name": "interpolated_XD_step",
+      "update": "interpolated_XD[0] * pow(10, interpolated_XD[1])"
+    },
+    {
+      "name": "XZ_step",
+      "update": "XZ[0] * pow(10, XZ[1])"
+    },
+    {
+      "name": "interpolated_XZ_step",
+      "update": "interpolated_XZ[0] * pow(10, interpolated_XZ[1])"
+    },
+    {
+      "name": "symbolHeightPixels",
+      "value": 10
+    },
+    {
+      "name": "minYDistance",
+      "value": 8
+    },
+    {
+      "name": "beta_Y",
+      "update": "curY ? log(span(curY)/YSize[0] * (symbolHeightPixels + minYDistance))/log(10) : 0" 
+    },
+    {
+      "name": "interpolated_beta_Y",
+      "update": "interpolatedCurY ? log(span(interpolatedCurY)/YSize[0] * (symbolHeightPixels + minYDistance))/log(10) : 0" 
+    },
+    {
+      "name": "beta_YD",
+      "update": "curY ? log(span(curY)/YSize[1] * (symbolHeightPixels + minYDistance))/log(10) : 0" 
+    },
+    {
+      "name": "interpolated_beta_YD",
+      "update": "interpolatedCurY ? log(span(interpolatedCurY)/YSize[1] * (symbolHeightPixels + minYDistance))/log(10) : 0" 
+    },
+    {
+      "name": "beta_YZ",
+      "update": "domYZoom ? log(span(domYZoom)/YSize[1] * (symbolHeightPixels + minYDistance))/log(10) : 0" 
+    },
+    {
+      "name": "interpolated_beta_YZ",
+      "update": "interpolatedDomYZoom ? log(span(interpolatedDomYZoom)/YSize[1] * (symbolHeightPixels + minYDistance))/log(10) : 0" 
+    },
+    {
+      "name": "Y_base",
+      "update": "scale('thresh1', -1 + ceil(beta_Y) - beta_Y)"
+    },
+    {
+      "name": "interpolated_Y_base",
+      "update": "scale('thresh1', -1 + ceil(interpolated_beta_Y) - interpolated_beta_Y)"
+    },
+    {
+      "name": "YD_base",
+      "update": "scale('thresh1', -1 + ceil(beta_YD) - beta_YD)"
+    },
+    {
+      "name": "interpolated_YD_base",
+      "update": "scale('thresh1', -1 + ceil(interpolated_beta_YD) - interpolated_beta_YD)"
+    },
+    {
+      "name": "YZ_base",
+      "update": "scale('thresh1', -1 + ceil(beta_YZ) - beta_YZ)"
+    },
+    {
+      "name": "interpolated_YZ_base",
+      "update": "scale('thresh1', -1 + ceil(interpolated_beta_YZ) - interpolated_beta_YZ)"
+    },
+    {
+      "name": "Y",
+      "update": "[Y_base, Y_base === 1 ? ceil(beta_Y) : floor(beta_Y)]"
+    },
+    {
+      "name": "interpolated_Y",
+      "update": "[interpolated_Y_base, interpolated_Y_base === 1 ? ceil(interpolated_beta_Y) : floor(interpolated_beta_Y)]"
+    },
+    {
+      "name": "YD",
+      "update": "[YD_base, YD_base === 1 ? ceil(beta_YD) : floor(beta_YD)]"
+    },
+    {
+      "name": "interpolated_YD",
+      "update": "[interpolated_YD_base, interpolated_YD_base === 1 ? ceil(interpolated_beta_YD) : floor(interpolated_beta_YD)]"
+    },
+    {
+      "name": "YZ",
+      "update": "[YZ_base, YZ_base === 1 ? ceil(beta_YZ) : floor(beta_YZ)]"
+    },
+    {
+      "name": "interpolated_YZ",
+      "update": "[interpolated_YZ_base, interpolated_YZ_base === 1 ? ceil(interpolated_beta_YZ) : floor(interpolated_beta_YZ)]"
+    },
+    {
+      "name": "Y_step",
+      "update": "Y[0] * pow(10, Y[1])"
+    },
+    {
+      "name": "interpolated_Y_step",
+      "update": "interpolated_Y[0] * pow(10, interpolated_Y[1])"
+    },
+    {
+      "name": "YD_step",
+      "update": "YD[0] * pow(10, YD[1])"
+    },
+    {
+      "name": "interpolated_YD_step",
+      "update": "interpolated_YD[0] * pow(10, interpolated_YD[1])"
+    },
+    {
+      "name": "YZ_step",
+      "update": "YZ[0] * pow(10, YZ[1])"
+    },
+    {
+      "name": "interpolated_YZ_step",
+      "update": "interpolated_YZ[0] * pow(10, interpolated_YZ[1])"
+    },
+    {
+      "name": "X_digits_after_dot",
+      "update": "-min(0, X[1])"
+    },
+    {
+      "name": "interpolated_X_digits_after_dot",
+      "update": "-min(0, interpolated_X[1])"
+    },
+    {
+      "name": "XD_digits_after_dot",
+      "update": "-min(0, XD[1])"
+    },
+    {
+      "name": "interpolated_XD_digits_after_dot",
+      "update": "-min(0, interpolated_XD[1])"
+    },
+    {
+      "name": "XZ_digits_after_dot",
+      "update": "-min(0, XZ[1])"
+    },
+    {
+      "name": "interpolated_XZ_digits_after_dot",
+      "update": "-min(0, interpolated_XZ[1])"
+    },
+    {
+      "name": "Y_digits_after_dot",
+      "update": "-min(0, Y[1])"
+    },
+    {
+      "name": "interpolated_Y_digits_after_dot",
+      "update": "-min(0, interpolated_Y[1])"
+    },
+    {
+      "name": "YD_digits_after_dot",
+      "update": "-min(0, YD[1])"
+    },
+    {
+      "name": "interpolated_YD_digits_after_dot",
+      "update": "-min(0, interpolated_YD[1])"
+    },
+    {
+      "name": "YZ_digits_after_dot",
+      "update": "-min(0, YZ[1])"
+    },
+    {
+      "name": "interpolated_YZ_digits_after_dot",
+      "update": "-min(0, interpolated_YZ[1])"
+    },
+    {
+      "name": "more_digits",
+      "value": 2
+    },
+    {
+      "name": "X_format",
+      "update": "'.'+X_digits_after_dot+'f'"
+    },
+    {
+      "name": "X_format_for_prompt",
+      "update": "'.'+(X_digits_after_dot+more_digits)+'f'"
+    },
+    {
+      "name": "interpolated_X_format",
+      "update": "'.'+interpolated_X_digits_after_dot+'f'"
+    },
+    {
+      "name": "XD_format",
+      "update": "'.'+XD_digits_after_dot+'f'"
+    },
+    {
+      "name": "XD_format_for_prompt",
+      "update": "'.'+(XD_digits_after_dot+more_digits)+'f'"
+    },
+    {
+      "name": "interpolated_XD_format",
+      "update": "'.'+interpolated_XD_digits_after_dot+'f'"
+    },
+    {
+      "name": "XZ_format",
+      "update": "'.'+XZ_digits_after_dot+'f'"
+    },
+    {
+      "name": "XZ_format_for_prompt",
+      "update": "'.'+(XZ_digits_after_dot+more_digits)+'f'"
+    },
+    {
+      "name": "interpolated_XZ_format",
+      "update": "'.'+interpolated_XZ_digits_after_dot+'f'"
+    },
+    {
+      "name": "Y_format",
+      "update": "'.'+Y_digits_after_dot+'f'"
+    },
+    {
+      "name": "Y_format_for_prompt",
+      "update": "'.'+(Y_digits_after_dot+more_digits)+'f'"
+    },
+    {
+      "name": "interpolated_Y_format",
+      "update": "'.'+interpolated_Y_digits_after_dot+'f'"
+    },
+    {
+      "name": "YD_format",
+      "update": "'.'+YD_digits_after_dot+'f'"
+    },
+    {
+      "name": "YD_format_for_prompt",
+      "update": "'.'+(YD_digits_after_dot+more_digits)+'f'"
+    },
+    {
+      "name": "interpolated_YD_format",
+      "update": "'.'+interpolated_YD_digits_after_dot+'f'"
+    },
+    {
+      "name": "YZ_format",
+      "update": "'.'+YZ_digits_after_dot+'f'"
+    },
+    {
+      "name": "YZ_format_for_prompt",
+      "update": "'.'+(YZ_digits_after_dot+more_digits)+'f'"
+    },
+    {
+      "name": "interpolated_YZ_format",
+      "update": "'.'+interpolated_YZ_digits_after_dot+'f'"
+    },
+    {
+      "name": "X_ticks",
+      "update": "curX ? sequence(floor(curX[0]/X_step) * X_step,(ceil(curX[1]/X_step)+1) * X_step, X_step) : []"
+    },
+    {
+      "name": "interpolated_X_ticks",
+      "update": "interpolatedCurX ? sequence(floor(interpolatedCurX[0]/interpolated_X_step) * interpolated_X_step,(ceil(interpolatedCurX[1]/interpolated_X_step)+1) * interpolated_X_step, interpolated_X_step) : []"
+    },
+    {
+      "name": "XD_ticks",
+      "update": "curX ? sequence(floor(curX[0]/XD_step) * XD_step,(ceil(curX[1]/XD_step)+1) * XD_step, XD_step) : []"
+    },
+    {
+      "name": "interpolated_XD_ticks",
+      "update": "interpolatedCurX ? sequence(floor(interpolatedCurX[0]/interpolated_XD_step) * interpolated_XD_step,(ceil(interpolatedCurX[1]/interpolated_XD_step)+1) * interpolated_XD_step, interpolated_XD_step) : []"
+    },
+    {
+      "name": "XZ_ticks",
+      "update": "domXZoom ? sequence(floor(domXZoom[0]/XZ_step) * XZ_step,(ceil(domXZoom[1]/XZ_step)+1) * XZ_step, XZ_step) : []"
+    },
+    {
+      "name": "interpolated_XZ_ticks",
+      "update": "interpolatedDomXZoom ? sequence(floor(interpolatedDomXZoom[0]/interpolated_XZ_step) * interpolated_XZ_step,(ceil(interpolatedDomXZoom[1]/interpolated_XZ_step)+1) * interpolated_XZ_step, interpolated_XZ_step) : []"
+    },
+    {
+      "name": "Y_ticks",
+      "update": "curY ? sequence(floor(curY[0]/Y_step) * Y_step,(ceil(curY[1]/Y_step)+1) * Y_step, Y_step) : []"
+    },
+    {
+      "name": "interpolated_Y_ticks",
+      "update": "interpolatedCurY ? sequence(floor(interpolatedCurY[0]/interpolated_Y_step) * interpolated_Y_step,(ceil(interpolatedCurY[1]/interpolated_Y_step)+1) * interpolated_Y_step, interpolated_Y_step) : []"
+    },
+    {
+      "name": "YD_ticks",
+      "update": "curY ? sequence(floor(curY[0]/YD_step) * YD_step,(ceil(curY[1]/YD_step)+1) * YD_step, YD_step) : []"
+    },
+    {
+      "name": "interpolated_YD_ticks",
+      "update": "interpolatedCurY ? sequence(floor(interpolatedCurY[0]/interpolated_YD_step) * interpolated_YD_step,(ceil(interpolatedCurY[1]/interpolated_YD_step)+1) * interpolated_YD_step, interpolated_YD_step) : []"
+    },
+    {
+      "name": "YZ_ticks",
+      "update": "domYZoom ? sequence(floor(domYZoom[0]/YZ_step) * YZ_step,(ceil(domYZoom[1]/YZ_step)+1) * YZ_step, YZ_step) : []"
+    },
+    {
+      "name": "interpolated_YZ_ticks",
+      "update": "interpolatedDomYZoom ? sequence(floor(interpolatedDomYZoom[0]/interpolated_YZ_step) * interpolated_YZ_step,(ceil(interpolatedDomYZoom[1]/interpolated_YZ_step)+1) * interpolated_YZ_step, interpolated_YZ_step) : []"
+    },
+    {
+      "name": "X_x_text",
+      "update": "isNumber(x) ? 'x: ' + format(invert(cellMeta.XY.xscale, x), X_format_for_prompt) : ''"
+    },
+    {
+      "name": "XD_x_text",
+      "update": "isNumber(x) ? 'x: ' + format(invert(cellMeta.X.xscale, x), XD_format_for_prompt) : ''"
+    },
+    {
+      "name": "XZ_x_text",
+      "update": "isNumber(x) ? 'x: ' + format(invert(cellMeta.Z.xscale, x), XZ_format_for_prompt) : ''"
+    },
+    {
+      "name": "X_left_brush_x_text",
+      "update": "isArray(brushX) ? 'x: ' + format(brushX[0], X_format_for_prompt) : ''"
+    },
+    {
+      "name": "XD_left_brush_x_text",
+      "update": "isArray(brushX) ? 'x: ' + format(brushX[0], XD_format_for_prompt) : ''"
+    },
+    {
+      "name": "X_right_brush_x_text",
+      "update": "isArray(brushX) ? 'x: ' + format(brushX[1], X_format_for_prompt) : ''"
+    },
+    {
+      "name": "XD_right_brush_x_text",
+      "update": "isArray(brushX) ? 'x: ' + format(brushX[1], XD_format_for_prompt) : ''"
+    },
+    {
+      "name": "Y_y_text",
+      "update": "isNumber(y) ? 'y: ' + format(invert(cellMeta.XY.yscale, y), Y_format_for_prompt) : ''"
+    },
+    {
+      "name": "YD_y_text",
+      "update": "isNumber(y) ? 'y: ' + format(invert(cellMeta.Y.yscale, y), YD_format_for_prompt) : ''"
+    },
+    {
+      "name": "YZ_y_text",
+      "update": "isNumber(y) ? 'y: ' + format(invert(cellMeta.Z.yscale, y), YZ_format_for_prompt) : ''"
+    },
+    {
+      "name": "Y_down_brush_y_text",
+      "update": "isArray(brushY) ? 'y: ' + format(brushY[0], Y_format_for_prompt) : ''"
+    },
+    {
+      "name": "YD_down_brush_y_text",
+      "update": "isArray(brushY) ? 'y: ' + format(brushY[0], YD_format_for_prompt) : ''"
+    },
+    {
+      "name": "Y_up_brush_y_text",
+      "update": "isArray(brushY) ? 'y: ' + format(brushY[1], Y_format_for_prompt) : ''"
+    },
+    {
+      "name": "YD_up_brush_y_text",
+      "update": "isArray(brushY) ? 'y: ' + format(brushY[1], YD_format_for_prompt) : ''"
+    },
+    {
+      "name": "text",
+      "update": "isMovingBrush ? '' : (idInteractive === 'XY' ? X_x_text + ', ' + Y_y_text : (idInteractive === 'X' ? XD_x_text : (idInteractive === 'Y' ? YD_y_text : (idInteractive === 'Z' ? XZ_x_text + ', ' + YZ_y_text : ''))))"
+    },
+    {
+      "name": "brush_text1",
+      "update": "isMovingBrush ? (idInteractive === 'XY' ? X_left_brush_x_text + ', ' + Y_down_brush_y_text : (idInteractive === 'X' ? XD_left_brush_x_text : (idInteractive === 'Y' ? YD_down_brush_y_text : null))) : ''"
+    },
+    {
+      "name": "brush_text2",
+      "update": "isMovingBrush ? (idInteractive === 'XY' ? X_right_brush_x_text + ', ' + Y_up_brush_y_text : (idInteractive === 'X' ? XD_right_brush_x_text : (idInteractive === 'Y' ? YD_up_brush_y_text : null))) : ''"
+    },
+    {
+      "name": "X_x_text_size",
+      "update": "isNumber(x) ? symbolPixelsForPrompt * (digits_before_dot_count + X_digits_after_dot + more_digits) + dotPixelsForPrompt * (X_digits_after_dot > 0 ? 1 : 0) + (x < 0 ? minusPixelsForPrompt : 0) : 0"
+    },
+    {
+      "name": "XD_x_text_size",
+      "update": "isNumber(x) ? symbolPixelsForPrompt * (digits_before_dot_count + XD_digits_after_dot + more_digits) + dotPixelsForPrompt * (XD_digits_after_dot > 0 ? 1 : 0) + (x < 0 ? minusPixelsForPrompt : 0) : 0"
+    },
+    {
+      "name": "XZ_x_text_size",
+      "update": "symbolPixelsForPrompt * (digits_before_dot_count + XZ_digits_after_dot + more_digits) + dotPixelsForPrompt * (XZ_digits_after_dot > 0 ? 1 : 0) + (x < 0 ? minusPixelsForPrompt : 0)"
+    },
+    {
+      "name": "X_brush_x_text_size",
+      "update": "isArray(brushX) ? symbolPixelsForPrompt * (digits_before_dot_count + X_digits_after_dot + more_digits) + dotPixelsForPrompt * (X_digits_after_dot > 0 ? 1 : 0) + (x < 0 ? minusPixelsForPrompt : 0) : 0"
+    },
+    {
+      "name": "XD_brush_x_text_size",
+      "update": "isArray(brushX) ? symbolPixelsForPrompt * (digits_before_dot_count + XD_digits_after_dot + more_digits) + dotPixelsForPrompt * (XD_digits_after_dot > 0 ? 1 : 0) + (x < 0 ? minusPixelsForPrompt : 0) : 0"
+    },
+    {
+      "name": "Y_y_text_size",
+      "update": "isNumber(y) ? symbolPixelsForPrompt * (y_digits_before_dot_count + Y_digits_after_dot + more_digits) + dotPixelsForPrompt * (Y_digits_after_dot > 0 ? 1 : 0) + (y < 0 ? minusPixelsForPrompt : 0) : 0"
+    },
+    {
+      "name": "YD_y_text_size",
+      "update": "isNumber(y) ? symbolPixelsForPrompt * (y_digits_before_dot_count + YD_digits_after_dot + more_digits) + dotPixelsForPrompt * (YD_digits_after_dot > 0 ? 1 : 0) + (y < 0 ? minusPixelsForPrompt : 0) : 0"
+    },
+    {
+      "name": "YZ_y_text_size",
+      "update": "symbolPixelsForPrompt * (y_digits_before_dot_count + YZ_digits_after_dot + more_digits) + dotPixelsForPrompt * (YZ_digits_after_dot > 0 ? 1 : 0) + (y < 0 ? minusPixelsForPrompt : 0)"
+    },
+    {
+      "name": "Y_y_text_size_glob",
+      "update": "y_worst_F + symbolPixelsForPrompt * (Y_digits_after_dot + more_digits) + dotPixelsForPrompt * (Y_digits_after_dot > 0 ? 1 : 0)"
+    },
+    {
+      "name": "YD_y_text_size_glob",
+      "update": "y_worst_F + symbolPixelsForPrompt * (YD_digits_after_dot + more_digits) + dotPixelsForPrompt * (YD_digits_after_dot > 0 ? 1 : 0)"
+    },
+    {
+      "name": "YZ_y_text_size_glob",
+      "update": "y_worst_F_zoom + symbolPixelsForPrompt * (YZ_digits_after_dot + more_digits) + dotPixelsForPrompt * (YZ_digits_after_dot > 0 ? 1 : 0)"
+    },
+    {
+      "name": "Y_brush_y_text_size",
+      "update": "isArray(brushY) ? symbolPixelsForPrompt * (y_digits_before_dot_count + Y_digits_after_dot + more_digits) + dotPixelsForPrompt * (Y_digits_after_dot > 0 ? 1 : 0) + (y < 0 ? minusPixelsForPrompt : 0) : 0"
+    },
+    {
+      "name": "YD_brush_y_text_size",
+      "update": "isArray(brushY) ? symbolPixelsForPrompt * (y_digits_before_dot_count + YD_digits_after_dot + more_digits) + dotPixelsForPrompt * (YD_digits_after_dot > 0 ? 1 : 0) + (y < 0 ? minusPixelsForPrompt : 0) : 0"
+    },
+    {
+      "name": "text_size",
+      "update": "isMovingBrush ? 0 : (idInteractive === 'XY' ? X_x_text_size + symbolPixelsForPrompt + dotPixelsForPrompt + Y_y_text_size + (dotPixelsForPrompt + 2 * symbolPixelsForPrompt) * 2: (idInteractive === 'X' ? XD_x_text_size + dotPixelsForPrompt + 2 * symbolPixelsForPrompt : (idInteractive === 'Y' ? YD_y_text_size + dotPixelsForPrompt + 2 * symbolPixelsForPrompt: (idInteractive === 'Z' ? XZ_x_text_size + symbolPixels + dotPixels + YZ_y_text_size + (dotPixelsForPrompt + 2 * symbolPixelsForPrompt) * 2 : 0))))"
+    },
+    {
+      "name": "brush_text_size",
+      "update": "isMovingBrush ? (idInteractive === 'XY' ? X_brush_x_text_size + symbolPixelsForPrompt + dotPixelsForPrompt + Y_brush_y_text_size + (dotPixelsForPrompt + 2 * symbolPixelsForPrompt) * 2: (idInteractive === 'X' ? XD_brush_x_text_size + dotPixelsForPrompt + 2 * symbolPixelsForPrompt : (idInteractive === 'Y' ? YD_brush_y_text_size + dotPixelsForPrompt + 2 * symbolPixelsForPrompt : null))) : ''"
+    },
+    {
+      "name": "textRectWidth",
+      "update": "isNumber(cell.x) && isNumber(cell.y) ? text_size + textPaddingX * 2 : 0"
+    },
+    {
+      "name": "textLinesCount",
+      "update": "1"
+    },
+    {
+      "name": "lineHeight",
+      "update": "12"
+    },
+    {
+      "name": "textRectHeight",
+      "update": "lineHeight * textLinesCount + textPaddingY * 2"
+    },
+    {
+      "name": "textRectLeftXPos",
+      "update": "xGlob + deltaCanvasSavior[0] - 3 - textRectWidth"
+    },
+    {
+      "name": "textRectRightXPos",
+      "update": "xGlob + deltaCanvasSavior[0] + 3"
+    },
+    {
+      "name": "textRectUpYPos",
+      "update": "yGlob + deltaCanvasSavior[1] - 3 - textRectHeight"
+    },
+    {
+      "name": "textRectDownYPos",
+      "update": "yGlob + deltaCanvasSavior[1] + 3"
+    },
+    {
+      "name": "textRectXPos",
+      "update": "idInteractive === 'Y' || idInteractive && (cell.pointerdown && (cell.moveAfterDown && (cell.moveAfterDown === 'brushSelect' && (idInteractive === 'XY' || idInteractive === 'X' && xInScale >= cell.downPoint[0]) || cell.moveAfterDown === 'drag' || cell.moveAfterDown === 'pan') || !cell.moveAfterDown) || !cell.pointerdown) ? textRectRightXPos : (idInteractive === 'X' && cell.pointerdown && cell.moveAfterDown === 'brushSelect' && xInScale < cell.downPoint[0] ? textRectLeftXPos : null)"
+    },
+    {
+      "name": "textRectYPos",
+      "update": "idInteractive === 'X' || idInteractive && (cell.pointerdown && (cell.moveAfterDown && (cell.moveAfterDown === 'brushSelect' && (idInteractive === 'XY' && !(xInScale < cell.downPoint[0] && yInScale < cell.downPoint[1]) || idInteractive === 'Y' && yInScale >= cell.downPoint[1]) || cell.moveAfterDown === 'drag' && !(xInScale < cell.downPoint[0] && yInScale < cell.downPoint[1]) || cell.moveAfterDown === 'pan') || !cell.moveAfterDown) || !cell.pointerdown) ? textRectUpYPos : (idInteractive && cell.pointerdown && cell.moveAfterDown && (cell.moveAfterDown === 'brushSelect' && (idInteractive === 'XY' && (xInScale < cell.downPoint[0] && yInScale < cell.downPoint[1]) || idInteractive === 'Y' && yInScale < cell.downPoint[1]) || cell.moveAfterDown === 'drag' && (xInScale < cell.downPoint[0] && yInScale < cell.downPoint[1])) ? textRectDownYPos : null)"
+    },
+    {
+      "name": "brushTextRectWidth",
+      "update": "isArray(brushX) && isArray(brushY) && idInteractive ? brush_text_size + textPaddingX * 2: 0"
+    },
+    {
+      "name": "brushTextLinesCount",
+      "update": "1"
+    },
+    {
+      "name": "brushLineHeight",
+      "update": "12"
+    },
+    {
+      "name": "brushTextRectHeight",
+      "update": "brushLineHeight * brushTextLinesCount + textPaddingY * 2"
+    },
+    {
+      "name": "brushTextRectLeftXPos",
+      "update": "(idInteractive === 'XY' && cell.XYMode === 'brushMove' || idInteractive === 'X' && cell.XMode === 'brushMove') && brushX ? cellMeta[idInteractive].x_min_pos + deltaCanvasSavior[0] + scale(cellMeta[idInteractive].xscale, brushX[0]) - 3 - brushTextRectWidth : (idInteractive === 'Y' && cell.YMode === 'brushMove' ? xGlob + deltaCanvasSavior[0] + 3 : null)"
+    },
+    {
+      "name": "brushTextRectRightXPos",
+      "update": "(idInteractive === 'XY' && cell.XYMode === 'brushMove' || idInteractive === 'X' && cell.XMode === 'brushMove') && brushX ? cellMeta[idInteractive].x_min_pos + deltaCanvasSavior[0] + scale(cellMeta[idInteractive].xscale, brushX[1]) + 3 : (idInteractive === 'Y' && cell.YMode === 'brushMove' ? xGlob + deltaCanvasSavior[0] + 3 : null)"
+    },
+    {
+      "name": "brushTextRectDownYPos",
+      "update": "(idInteractive === 'XY' && cell.XYMode === 'brushMove' || idInteractive === 'Y' && cell.YMode === 'brushMove') && brushY ? cellMeta[idInteractive].y_min_pos + deltaCanvasSavior[1] + scale(cellMeta[idInteractive].yscale, brushY[0]) + 3 : (idInteractive === 'X' && cell.XMode === 'brushMove' ? yGlob + deltaCanvasSavior[1] - 3 - brushTextRectHeight : null)"
+    },
+    {
+      "name": "brushTextRectUpYPos",
+      "update": "(idInteractive === 'XY' && cell.XYMode === 'brushMove' || idInteractive === 'Y' && cell.YMode === 'brushMove') && brushY ? cellMeta[idInteractive].y_min_pos + deltaCanvasSavior[1] + scale(cellMeta[idInteractive].yscale, brushY[1]) - 3 - brushTextRectHeight : (idInteractive === 'X' && cell.XMode === 'brushMove' ? yGlob + deltaCanvasSavior[1] - 3 - brushTextRectHeight: null)"
+    }
+  ],
+
+  "data": [
+    {
+      "name": "pows",
+      "transform": [
+        {
+          "type": "sequence",
+          "start": {"signal": "0"},
+          "stop": {"signal": "(2 * powsRange + maxResolution) * 3"},
+          "step": 1,
+          "as": "index"
+        },
+        {
+          "type": "formula",
+          "as": "base",
+          "expr": "[1,2,5][datum.index % 3]"
+        },
+        {
+          "type": "formula",
+          "as": "pow",
+          "expr": "sequence(-powsRange - maxResolution, powsRange, 1)[floor(datum.index/3)]"
+        }
+      ]
+    },
+    {
+      "name": "for_thresh_scale",
+      "source": "pows",
+      "transform": [
+        {
+          "type": "formula",
+          "as": "value",
+          "expr": "-(datum.base * pow(10, datum.pow) + datum.pow * symbolPixels)"
+        }
+      ]
+    },
+    {
+      "name": "main_data",
+      "url": "https://cdn.jsdelivr.net/npm/vega-datasets@latest/data/penguins.json",
+      "transform": [
+        {"type": "filter", "expr": "datum[XName] != null"}
+      ]
+    },
+    {
+      "name": "test_data",
+      "values": [{"custom_step":63,"valid_loss":68.27622985839844,"stroke":"fit0"}]
+    }
+  ],
+
+  "scales": [
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": {"data": "main_data", "field": "Species"},
+      "range": "category"
+    },
+    {
+      "name": "thresh1",
+      "type": "threshold",
+      "domain": {"signal": "[-log(5)/log(10), -log(2)/log(10)]"},
+      "range": [1, 5, 2] 
+    },
+    {
+      "name": "thresh2_base",
+      "type": "threshold",
+      "domain": {"signal": "reverse(slice(pluck(data('for_thresh_scale'), 'value'), 0, -1))"},
+      "range": {"signal": "reverse(pluck(data('for_thresh_scale'), 'base'))"}
+    },
+    {
+      "name": "thresh2_pow",
+      "type": "threshold",
+      "domain": {"signal": "reverse(slice(pluck(data('for_thresh_scale'), 'value'), 0, -1))"},
+      "range": {"signal": "reverse(pluck(data('for_thresh_scale'), 'pow'))"}
+    },
+    {
+      "name": "sX", "zero": false, "nice": false,
+      "domain": {"signal": "curX"},
+      "range": [0, {"signal": "XSize[0]"}]
+    },
+    {
+      "name": "interpolatedSX", "zero": false, "nice": false,
+      "domain": {"signal": "interpolatedCurX"},
+      "range": [0, {"signal": "XSize[0]"}]
+    },
+    {
+      "name": "sXD", "zero": false, "nice": false,
+      "domain": {"signal": "curX"},
+      "range": [{"signal": "0"}, {"signal": "XSize[1]"}]
+    },
+    {
+      "name": "interpolatedSXD", "zero": false, "nice": false,
+      "domain": {"signal": "interpolatedCurX"},
+      "range": [{"signal": "0"}, {"signal": "XSize[1]"}]
+    },
+    {
+      "name": "sY", "zero": false, "nice": false,
+      "domain": {"signal": "curY"},
+      "range": [{"signal": "YSize[0]"}, 0]
+    },
+    {
+      "name": "interpolatedSY", "zero": false, "nice": false,
+      "domain": {"signal": "interpolatedCurY"},
+      "range": [{"signal": "YSize[0]"}, 0]
+    },
+    {
+      "name": "sYD", "zero": false, "nice": false,
+      "domain": {"signal": "curY"},
+      "range": [{"signal": "YSize[1]"}, 0]
+    },
+    {
+      "name": "interpolatedSYD", "zero": false, "nice": false,
+      "domain": {"signal": "interpolatedCurY"},
+      "range": [{"signal": "YSize[1]"}, 0]
+    },
+    {
+      "name": "sXZ", "zero": false, "nice": false,
+      "domain": {"signal": "curX"},
+      "domainRaw": {"signal": "domXZoom"},
+      "range": [0, {"signal": "XSize[1]"}]
+    },
+    {
+      "name": "interpolatedSXZ", "zero": false, "nice": false,
+      "domain": {"signal": "interpolatedCurX"},
+      "domainRaw": {"signal": "interpolatedDomXZoom"},
+      "range": [0, {"signal": "XSize[1]"}]
+    },
+    {
+      "name": "sYZ", "zero": false, "nice": false,
+      "domain": {"signal": "curY"},
+      "domainRaw": {"signal": "domYZoom"}, 
+      "range": [{"signal": "YSize[1]"}, 0]
+    },
+    {
+      "name": "interpolatedSYZ", "zero": false, "nice": false,
+      "domain": {"signal": "interpolatedCurY"},
+      "domainRaw": {"signal": "interpolatedDomYZoom"},
+      "range": [{"signal": "YSize[1]"}, 0]
+    }
+  ],
+
+  "marks": [
+    {
+      "type": "rect",
+      "name": "totalSVGTextSelectionBlock",
+      "encode": {
+        "update": {
+          "x": {"signal": "deltaCanvasSavior[0]"},
+          "y": {"signal": "deltaCanvasSavior[1]"},
+          "width": {"signal": "cell.idActive || sizes.pointerdown ? W + 3 + legendW : 0"},
+          "height": {"signal": "cell.idActive || sizes.pointerdown ? H : 0"},
+          "fill": { "value": "transparent" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "interactive": false,
+      "zindex": 4,
+      "encode": {
+        "update": {
+          "opacity": {"signal": "isNumber(cell.x) && isNumber(cell.y) && cell.idInteractive && !isMovingBrush ? 1 : 0"},
+          "x": { "signal": "clamp(textRectXPos, deltaCanvasSavior[0], W + 3 + deltaCanvasSavior[0] + legendW - textRectWidth) + textPaddingX" },
+          "y": { "signal": "clamp(textRectYPos, deltaCanvasSavior[1], H + deltaCanvasSavior[1] - textRectHeight) + textRectHeight - textPaddingY" },
+          "text": {
+            "signal": "isNumber(cell.x) && isNumber(cell.y) && cell.idInteractive ? text : ''"
+          },
+          "fill": { "value": "%23333" },
+          "fontSize": { "value": 12 },
+          "font": {"value": "sans-serif"}
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "interactive": false,
+      "zindex": 3,
+      "encode": {
+        "update": {
+          "x": { "signal": "clamp(textRectXPos, deltaCanvasSavior[0], W + deltaCanvasSavior[0] + 3 + legendW - textRectWidth)" },
+          "y": { "signal": "clamp(textRectYPos, deltaCanvasSavior[1], H + deltaCanvasSavior[1] - textRectHeight)" },
+          "opacity": {"signal": "isNumber(cell.x) && isNumber(cell.y) && cell.idInteractive && !isMovingBrush ? 1 : 0"},
+          "width": {
+            "signal": "textRectWidth"
+          },
+          "height": {
+            "signal": "textRectHeight"
+          },
+          "fill": { "value": "%23FFEAA7" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "interactive": false,
+      "zindex": 4,
+      "encode": {
+        "update": {
+          "opacity": {"signal": "isArray(brushX) && isArray(brushY) && isMovingBrush && idInteractive ? 1 : 0"},
+          "x": { "signal": "clamp(brushTextRectLeftXPos, deltaCanvasSavior[0], W + deltaCanvasSavior[0] + 3 + legendW - brushTextRectWidth) + textPaddingX" },
+          "y": { "signal": "clamp(brushTextRectDownYPos, deltaCanvasSavior[1], H + deltaCanvasSavior[1] - brushTextRectHeight) + brushTextRectHeight - textPaddingY" },
+          "text": {
+            "signal": "isArray(brushX) && isArray(brushY) && isMovingBrush && cell.idInteractive ? brush_text1 : ''"
+          },
+          "fill": { "value": "%23333" },
+          "fontSize": { "value": 12 },
+          "font": {"value": "sans-serif"}
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "interactive": false,
+      "zindex": 3,
+      "encode": {
+        "update": {
+          "x": { "signal": "clamp(brushTextRectLeftXPos, deltaCanvasSavior[0], W + deltaCanvasSavior[0] + 3 + legendW - brushTextRectWidth)" },
+          "y": { "signal": "clamp(brushTextRectDownYPos, deltaCanvasSavior[1], H + deltaCanvasSavior[1] - brushTextRectHeight)" },
+          "opacity": {"signal": "isArray(brushX) && isArray(brushY) && cell.idInteractive && isMovingBrush ? 1 : 0"},
+          "width": {
+            "signal": "brushTextRectWidth"
+          },
+          "height": {
+            "signal": "brushTextRectHeight"
+          },
+          "fill": { "value": "%23FFEAA7" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "interactive": false,
+      "zindex": 4,
+      "encode": {
+        "update": {
+          "opacity": {"signal": "isArray(brushX) && isArray(brushY) && isMovingBrush && idInteractive ? 1 : 0"},
+          "x": { "signal": "clamp(brushTextRectRightXPos, deltaCanvasSavior[0], W + deltaCanvasSavior[1] + 3 + legendW - brushTextRectWidth) + textPaddingX" },
+          "y": { "signal": "clamp(brushTextRectUpYPos, deltaCanvasSavior[1], H + deltaCanvasSavior[1] - brushTextRectHeight) + brushTextRectHeight - textPaddingY" },
+          "text": {
+            "signal": "isArray(brushX) && isArray(brushY) && isMovingBrush && cell.idInteractive ? brush_text2 : ''"
+          },
+          "fill": { "value": "%23333" },
+          "fontSize": { "value": 12 },
+          "font": {"value": "sans-serif"}
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "interactive": false,
+      "zindex": 3,
+      "encode": {
+        "update": {
+          "x": { "signal": "clamp(brushTextRectRightXPos, deltaCanvasSavior[0], W + deltaCanvasSavior[0] + 3 + legendW - brushTextRectWidth)" },
+          "y": { "signal": "clamp(brushTextRectUpYPos, deltaCanvasSavior[1], H + deltaCanvasSavior[1] - brushTextRectHeight)" },
+          "opacity": {"signal": "isArray(brushX) && isArray(brushY) && cell.idInteractive && isMovingBrush ? 1 : 0"},
+          "width": {
+            "signal": "brushTextRectWidth"
+          },
+          "height": {
+            "signal": "brushTextRectHeight"
+          },
+          "fill": { "value": "%23FFEAA7" }
+        }
+      }
+    },
+    {
+      "name": "cellXY",
+      "type": "group",
+
+      "encode": {
+        "enter": {
+          "fill": {"value": "transparent"},
+          "stroke": {"value": "%23ddd"},
+          "clip": {"value": true}
+        },
+        "update": {
+          "x": {"signal": "XPos[0] + deltaCanvasSavior[0]"},
+          "y": {"signal": "YPos[0] + deltaCanvasSavior[1]"},
+          "width": {"signal": "XSize[0]"},
+          "height": {"signal": "YSize[0]"}
+        }
+      },
+
+      "signals": [
+        {
+          "name": "origBrushX1",
+          "value": null,
+          "update": "idInteractive === 'XY' ? (existsBrushX ? scale(cellMeta.XY.xscale, brushX[0]) : null) : (interpolatedExistsBrushX ? scale(cellMeta.XY.interpolatedXscale, interpolatedBrushX[0]) : null)"
+        },
+        {
+          "name": "origBrushX2",
+          "value": null,
+          "update": "idInteractive === 'XY' ? (existsBrushX ? scale(cellMeta.XY.xscale, brushX[1]) : null) : (interpolatedExistsBrushX ? scale(cellMeta.XY.interpolatedXscale, interpolatedBrushX[1]) : null)"
+        },
+        {
+          "name": "origBrushY1",
+          "value": null,
+          "update": "idInteractive === 'XY' ? (existsBrushY ? scale(cellMeta.XY.yscale, brushY[0]) : null) : (interpolatedExistsBrushY ? scale(cellMeta.XY.interpolatedYscale, interpolatedBrushY[0]) : null)"
+        },
+        {
+          "name": "origBrushY2",
+          "value": null,
+          "update": "idInteractive === 'XY' ? (existsBrushY ? scale(cellMeta.XY.yscale, brushY[1]) : null) : (interpolatedExistsBrushY ? scale(cellMeta.XY.interpolatedYscale, interpolatedBrushY[1]) : null)"
+        },
+        {
+          "name": "brushX1",
+          "update": "origBrushX1 ? origBrushX1 - max(minPixelRect-min(origBrushX2 - origBrushX1, minPixelRect), 0)/2 : null"
+        },
+        {
+          "name": "brushX2",
+          "update": "origBrushX2 ? origBrushX2 + max(minPixelRect-min(origBrushX2 - origBrushX1, minPixelRect), 0)/2 : null"
+        },
+        {
+          "name": "brushY1",
+          "update": "origBrushY1 ? origBrushY1 + max(minPixelRect-min(origBrushY1 - origBrushY2, minPixelRect), 0)/2 : null"
+        },
+        {
+          "name": "brushY2",
+          "update": "origBrushY2 ? origBrushY2 - max(minPixelRect-min(origBrushY1 - origBrushY2, minPixelRect), 0)/2 : null"
+        },
+        {
+          "name": "brushX1Interactive",
+          "update": "origBrushX1 ? origBrushX1 - max(minPixelBrush-min(origBrushX2 - origBrushX1, minPixelBrush), 0)/2 : null"
+        },
+        {
+          "name": "brushX2Interactive",
+          "update": "origBrushX2 ? origBrushX2 + max(minPixelBrush-min(origBrushX2 - origBrushX1, minPixelBrush), 0)/2 : null"
+        },
+        {
+          "name": "brushY1Interactive",
+          "update": "origBrushY1 ? origBrushY1 + max(minPixelBrush-min(origBrushY1 - origBrushY2, minPixelBrush), 0)/2 : null"
+        },
+        {
+          "name": "brushY2Interactive",
+          "update": "origBrushY2 ? origBrushY2 - max(minPixelBrush-min(origBrushY1 - origBrushY2, minPixelBrush), 0)/2 : null"
         }
       ],
-
       "axes": [
-        { "scale": "x", "orient": "bottom" },
-        { "scale": "y", "orient": "left" }
+        {
+          "orient": "bottom", "scale": "sX",
+          "title": "", "values": {"signal": "X_ticks"}, "domain": false, "ticks": false, "labels": false, "grid": true, "gridOpacity": {"signal": "idInteractive === 'XY' ? 1 : 0"}, "zindex": 1
+        },
+        {
+          "orient": "bottom", "scale": "interpolatedSX",
+          "title": "", "values": {"signal": "interpolated_X_ticks"}, "domain": false, "ticks": false, "labels": false, "grid": true, "gridOpacity": {"signal": "idInteractive === 'XY' ? 0 : 1"}, "zindex": 1
+        },
+        {
+          "orient": "left", "scale": "sY", 
+          "title": "", "values": {"signal": "Y_ticks"}, "domain": false, "ticks": false, "labels": false, "grid": true, "gridOpacity": {"signal": "idInteractive === 'XY' ? 1 : 0"}, "zindex": 1
+        },
+        {
+          "orient": "left", "scale": "interpolatedSY",
+          "title": "", "values": {"signal": "interpolated_Y_ticks"}, "domain": false, "ticks": false, "labels": false, "grid": true, "gridOpacity": {"signal": "idInteractive === 'XY' ? 0 : 1"}, "zindex": 1
+        }
       ],
-
       "marks": [
         {
-          "type": "symbol",
-          "from": {"data": "table"},
+          "type": "rect",
+          "zindex": 0,
+          "interactive": false,
+          "encode": {
+            "update": {
+              "fill": {"value": "%23eee"},
+              "opacity": {"signal": "(idInteractive === 'XY' ? isStart : interpolatedIsStart) ? 0 : 1"},
+              "x": {"signal": "brushX1"},
+              "x2": {"signal": "brushX2"},
+              "y": {"signal": "brushY1"},
+              "y2": {"signal": "brushY2"}
+            }
+          }
+        },
+        {
+          "type": "line",
+          "zindex": 2,
+          "from": {"data": "main_data"},
+          "interactive": false,
           "encode": {
             "enter": {
-              "x": {"scale": "x", "field": "x"},
-              "y": {"scale": "y", "field": "y"},
-              "size": {"value": 100}
+              "fillOpacity": {"value": 0.5},
+              "size": {"value": 32}
+            },
+            "update": {
+              "x": {
+                "scale": {"signal": "idInteractive === 'XY' ? cellMeta.XY.xscale : cellMeta.XY.interpolatedXscale"},
+                "field": {"signal": "XName"}
+              },
+              "y": {
+                "scale": {"signal": "idInteractive === 'XY' ? cellMeta.XY.yscale : cellMeta.XY.interpolatedYscale"},
+                "field": {"signal": "YName"}
+              },
+              "opacity": { "value": 1 }
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "name": "brushXY",
+          "interactive": {"signal": "idInteractive === 'XY' ? !isStart : !interpolatedIsStart"},
+          "encode": {
+            "enter": {
+              "fill": {"value": "transparent"}
+            },
+            "update": {
+              "x": {"signal": "brushX1Interactive"},
+              "x2": {"signal": "brushX2Interactive"},
+              "y": {"signal": "brushY1Interactive"},
+              "y2": {"signal": "brushY2Interactive"}
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "height": {"signal": "smallWidth"},
+              "fill": {"value": "firebrick"}
+            },
+            "update": {
+              "opacity": {"signal": "(idInteractive === 'XY' ? isStart : interpolatedIsStart) ? 0 : 1"},
+              "width": {"signal": "brushX2 - brushX1"},
+              "x": {"signal": "brushX1"},
+              "y": {"signal": "brushY1 - smallWidth"} 
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "height": {"signal": "smallWidth"},
+              "fill": {"value": "firebrick"}
+            },
+            "update": {
+              "opacity": {"signal": "(idInteractive === 'XY' ? isStart : interpolatedIsStart) ? 0 : 1"},
+              "width": {"signal": "brushX2 - brushX1"},
+              "x": {"signal": "brushX1"},
+              "y": {"signal": "brushY2"} 
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "width": {"signal": "smallWidth"},
+              "fill": {"value": "firebrick"}
+            },
+            "update": {
+              "opacity": {"signal": "(idInteractive === 'XY' ? isStart : interpolatedIsStart) ? 0 : 1"},
+              "height": {"signal": "brushY2 - brushY1"},
+              "x": {"signal": "brushX1"},
+              "y": {"signal": "brushY1"} 
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "width": {"signal": "smallWidth"},
+              "fill": {"value": "firebrick"}
+            },
+            "update": {
+              "opacity": {"signal": "(idInteractive === 'XY' ? isStart : interpolatedIsStart) ? 0 : 1"},
+              "height": {"signal": "brushY2 - brushY1"},
+              "x": {"signal": "brushX2 - smallWidth"},
+              "y": {"signal": "brushY1"} 
             }
           }
         }
       ]
-    };
+    },
+    {
+      "name": "cellX",
+      "type": "group",
 
-    vegaEmbed("#vis", spec, {
-      renderer: "svg",
-      actions: false,
-      resize: true   // 🔑 важно
-    });
+      "encode": {
+        "enter": {
+          "fill": {"value": "transparent"},
+          "stroke": {"value": "%23ddd"},
+          "clip": {"value": true}
+        },
+        "update": {
+          "x": {"signal": "XPos[1] + deltaCanvasSavior[0]"},
+          "y": {"signal": "YPos[0] + deltaCanvasSavior[1]"},
+          "width": {"signal": "XSize[1]"},
+          "height": {"signal": "YSize[0]"}
+        }
+      },
+
+      "signals": [
+        {
+          "name": "origBrushX1",
+          "value": null,
+          "update": "idInteractive === 'X' ? (existsBrushX ? scale(cellMeta.X.xscale, brushX[0]) : null) : (interpolatedExistsBrushX ? scale(cellMeta.X.interpolatedXscale, interpolatedBrushX[0]) : null)"
+        },
+        {
+          "name": "origBrushX2",
+          "value": null,
+          "update": "idInteractive === 'X' ? (existsBrushX ? scale(cellMeta.X.xscale, brushX[1]) : null) : (interpolatedExistsBrushX ? scale(cellMeta.X.interpolatedXscale, interpolatedBrushX[1]) : null)"
+        },
+        {
+          "name": "brushY1",
+          "value": null,
+          "update": "0"
+        },
+        {
+          "name": "brushY2",
+          "value": null,
+          "update": "YSize[0]"
+        },
+        {
+          "name": "brushX1",
+          "update": "origBrushX1 ? origBrushX1 - max(minPixelRect-min(origBrushX2 - origBrushX1, minPixelRect), 0)/2 : null"
+        },
+        {
+          "name": "brushX2",
+          "update": "origBrushX2 ? origBrushX2 + max(minPixelRect-min(origBrushX2 - origBrushX1, minPixelRect), 0)/2 : null"
+        },
+        {
+          "name": "brushX1Interactive",
+          "update": "origBrushX1 ? origBrushX1 - max(minPixelBrush-min(origBrushX2 - origBrushX1, minPixelBrush), 0)/2 : null"
+        },
+        {
+          "name": "brushX2Interactive",
+          "update": "origBrushX2 ? origBrushX2 + max(minPixelBrush-min(origBrushX2 - origBrushX1, minPixelBrush), 0)/2 : null"
+        }
+      ],
+      "axes": [
+        {
+          "orient": "bottom", "scale": "sXD", "values": {"signal": "XD_ticks"}, "domain": false, "ticks": false, "labels": false, "grid": true, "gridOpacity": {"signal": "idInteractive === 'X' ? 1 : 0"}, "zindex": 1
+        },
+        {
+          "orient": "bottom", "scale": "interpolatedSXD",
+          "values": {"signal": "interpolated_XD_ticks"}, "domain": false, "ticks": false, "labels": false, "grid": true, "gridOpacity": {"signal": "idInteractive === 'X' ? 0 : 1"}, "zindex": 1
+        },  
+        {
+          "orient": "left", "scale": "sY",
+          "title": "", "values": {"signal": "Y_ticks"}, "domain": false, "ticks": false, "labels": false, "grid": true, "gridOpacity": {"signal": "idInteractive === 'X' ? 1 : 0"}, "zindex": 1
+        },
+        {
+          "orient": "left", "scale": "interpolatedSY",
+          "title": "", "values": {"signal": "interpolated_Y_ticks"}, "domain": false, "ticks": false, "labels": false, "grid": true, "gridOpacity": {"signal": "idInteractive === 'X' ? 0 : 1"}, "zindex": 1
+        }
+      ],
+      "marks": [
+        {
+          "type": "rect",
+          "zindex": 0,
+          "interactive": false,
+          "encode": {
+            "update": {
+              "fill": {"value": "%23eee"},
+              "opacity": {"signal": "(idInteractive === 'X' ? isStartX : interpolatedIsStartX) ? 0 : 1"},
+              "x": {"signal": "brushX1"},
+              "x2": {"signal": "brushX2"},
+              "y": {"signal": "brushY1"},
+              "y2": {"signal": "brushY2"}
+            }
+          }
+        },
+        {
+          "type": "line",
+          "zindex": 2,
+          "from": {"data": "main_data"},
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "fillOpacity": {"value": 0.5},
+              "size": {"value": 32}
+            },
+            "update": {
+              "x": {
+                "scale": {"signal": "idInteractive === 'X' ? cellMeta.X.xscale : cellMeta.X.interpolatedXscale"},
+                "field": {"signal": "XName"}
+              },
+              "y": {
+                "scale": {"signal": "idInteractive === 'X' ? cellMeta.X.yscale : cellMeta.X.interpolatedYscale"},
+                "field": {"signal": "YName"}
+              },
+              "opacity": { "value": 1 }
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "name": "brushX",
+          "interactive": {"signal": "idInteractive === 'X' ? !isStartX : !interpolatedIsStartX"},
+          "encode": {
+            "enter": {
+              "fill": {"value": "transparent"}
+            },
+            "update": {
+              "x": {"signal": "brushX1Interactive"},
+              "x2": {"signal": "brushX2Interactive"},
+              "y": {"signal": "brushY1"},
+              "y2": {"signal": "brushY2"}
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "width": {"signal": "bigWidth"},
+              "fill": {"value": "firebrick"}
+            },
+            "update": {
+              "opacity": {"signal": "(idInteractive === 'X' ?  isStartX : interpolatedIsStartX) ? 0 : 1"},
+              "height": {"signal": "brushY2 - brushY1"},
+              "x": {"signal": "brushX1"},
+              "y": {"signal": "brushY1"} 
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "width": {"signal": "bigWidth"},
+              "fill": {"value": "firebrick"}
+            },
+            "update": {
+              "opacity": {"signal": "(idInteractive === 'X' ?  isStartX : interpolatedIsStartX) ? 0 : 1"},
+              "height": {"signal": "brushY2 - brushY1"},
+              "x": {"signal": "brushX2 - bigWidth"},
+              "y": {"signal": "brushY1"} 
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "cellY",
+      "type": "group",
+
+      "encode": {
+        "enter": {
+          "fill": {"value": "transparent"},
+          "stroke": {"value": "%23ddd"},
+          "clip": {"value": true}
+        },
+        "update": {
+          "x": {"signal": "XPos[0] + deltaCanvasSavior[0]"},
+          "y": {"signal": "YPos[1] + deltaCanvasSavior[1]"},
+          "width": {"signal": "XSize[0]"},
+          "height": {"signal": "YSize[1]"}
+        }
+      },
+
+      "signals": [
+        {
+          "name": "brushX1",
+          "value": null,
+          "update": "0"
+        },
+        {
+          "name": "brushX2",
+          "value": null,
+          "update": "XSize[0]"
+        },
+        {
+          "name": "origBrushY1",
+          "value": null,
+          "update": "idInteractive === 'Y' ? (existsBrushY ? scale(cellMeta.Y.yscale, brushY[0]) : null) : (interpolatedExistsBrushY ? scale(cellMeta.Y.interpolatedYscale, interpolatedBrushY[0]) : null)"
+        },
+        {
+          "name": "origBrushY2",
+          "value": null,
+          "update": "idInteractive === 'Y' ? (existsBrushY ? scale(cellMeta.Y.yscale, brushY[1]) : null) : (interpolatedExistsBrushY ? scale(cellMeta.Y.interpolatedYscale, interpolatedBrushY[1]) : null)"
+        },
+        {
+          "name": "brushY1",
+          "update": "origBrushY1 ? origBrushY1 + max(minPixelRect-min(origBrushY1 - origBrushY2, minPixelRect), 0)/2 : null"
+        },
+        {
+          "name": "brushY2",
+          "update": "origBrushY2 ? origBrushY2 - max(minPixelRect-min(origBrushY1 - origBrushY2, minPixelRect), 0)/2 : null"
+        },
+        {
+          "name": "brushY1Interactive",
+          "update": "origBrushY1 ? origBrushY1 + max(minPixelBrush-min(origBrushY1 - origBrushY2, minPixelBrush), 0)/2 : null"
+        },
+        {
+          "name": "brushY2Interactive",
+          "update": "origBrushY2 ? origBrushY2 - max(minPixelBrush-min(origBrushY1 - origBrushY2, minPixelBrush), 0)/2 : null"
+        }
+      ],
+      "axes": [
+        {
+          "orient": "bottom", "scale": "sX",
+          "title": "", "values": {"signal": "X_ticks"}, "domain": false, "ticks": false, "labels": false, "grid": true, "gridOpacity": {"signal": "idInteractive === 'Y' ? 1 : 0"}, "zindex": 1
+        },
+        {
+          "orient": "bottom", "scale": "interpolatedSX",
+          "title": "", "values": {"signal": "interpolated_X_ticks"}, "domain": false, "ticks": false, "labels": false, "grid": true, "gridOpacity": {"signal": "idInteractive === 'Y' ? 0 : 1"}, "zindex": 1
+        },
+        {
+          "orient": "left", "scale": "sYD",
+          "title": "", "values": {"signal": "YD_ticks"}, "domain": false, "ticks": false, "labels": false, "grid": true, "gridOpacity": {"signal": "idInteractive === 'Y' ? 1 : 0"}, "zindex": 1
+        },
+        {
+          "orient": "left", "scale": "interpolatedSYD",
+          "title": "", "values": {"signal": "interpolated_YD_ticks"}, "domain": false, "ticks": false, "labels": false, "grid": true, "gridOpacity": {"signal": "idInteractive === 'Y' ? 0 : 1"}, "zindex": 1
+        }
+      ],
+      "marks": [
+        {
+          "type": "rect",
+          "zindex": 0,
+          "interactive": false,
+          "encode": {
+            "update": {
+              "fill": {"value": "%23eee"},
+              "opacity": {"signal": "(idInteractive === 'Y' ? isStartY : interpolatedIsStartY) ? 0 : 1"},
+              "x": {"signal": "brushX1"},
+              "x2": {"signal": "brushX2"},
+              "y": {"signal": "brushY1"},
+              "y2": {"signal": "brushY2"}
+            }
+          }
+        },
+        {
+          "type": "line",
+          "zindex": 2,
+          "from": {"data": "main_data"},
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "fillOpacity": {"value": 0.5},
+              "size": {"value": 32}
+            },
+            "update": {
+              "x": {
+                "scale": {"signal": "idInteractive === 'Y' ? cellMeta.Y.xscale : cellMeta.Y.interpolatedXscale"},
+                "field": {"signal": "XName"}
+              },
+              "y": {
+                "scale": {"signal": "idInteractive === 'Y' ? cellMeta.Y.yscale : cellMeta.Y.interpolatedYscale"},
+                "field": {"signal": "YName"}
+              },
+              "opacity": { "value": 1 }
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "name": "brushY",
+          "interactive": {"signal": "idInteractive === 'Y' ? !isStartY : !interpolatedIsStartY"},
+          "encode": {
+            "enter": {
+              "fill": {"value": "transparent"}
+            },
+            "update": {
+              "x": {"signal": "brushX1"},
+              "x2": {"signal": "brushX2"},
+              "y": {"signal": "brushY1Interactive"},
+              "y2": {"signal": "brushY2Interactive"}
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "height": {"signal": "bigWidth"},
+              "fill": {"value": "firebrick"}
+            },
+            "update": {
+              "opacity": {"signal": "(idInteractive === 'Y' ? isStartY : interpolatedIsStartY) ? 0 : 1"},
+              "width": {"signal": "brushX2 - brushX1"},
+              "x": {"signal": "brushX1"},
+              "y": {"signal": "brushY1 - bigWidth"} 
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "height": {"signal": "bigWidth"},
+              "fill": {"value": "firebrick"}
+            },
+            "update": {
+              "opacity": {"signal": "(idInteractive === 'Y' ? isStartY : interpolatedIsStartY) ? 0 : 1"},
+              "width": {"signal": "brushX2 - brushX1"},
+              "x": {"signal": "brushX1"},
+              "y": {"signal": "brushY2"} 
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "cellZ",
+      "type": "group",
+
+      "encode": {
+        "enter": {
+          "fill": {"value": "transparent"},
+          "stroke": {"value": "%23ddd"},
+          "clip": {"value": true}
+        },
+        "update": {
+          "x": {"signal": "XPos[1] + deltaCanvasSavior[0]"},
+          "y": {"signal": "YPos[1] + deltaCanvasSavior[1]"},
+          "width": {"signal": "XSize[1]"},
+          "height": {"signal": "YSize[1]"}
+        }
+      },
+
+      "signals": [
+        {
+          "name": "lastDragX1",
+          "value": null,
+          "update": "existsLastDragX ? scale(idInteractive === 'Z' ? cellMeta.Z.xscale : cellMeta.Z.interpolatedXscale, lastDragX[0]) : null"
+        },
+        {
+          "name": "lastDragX2",
+          "value": null,
+          "update": "existsLastDragX ? scale(idInteractive === 'Z' ? cellMeta.Z.xscale : cellMeta.Z.interpolatedXscale, lastDragX[1]) : null"
+        },
+        {
+          "name": "lastDragY1",
+          "value": null,
+          "update": "existsLastDragY ? scale(idInteractive === 'Z' ? cellMeta.Z.yscale : cellMeta.Z.interpolatedYscale, lastDragY[0]) : null"
+        },
+        {
+          "name": "lastDragY2",
+          "value": null,
+          "update": "existsLastDragY ? scale(idInteractive === 'Z' ? cellMeta.Z.yscale : cellMeta.Z.interpolatedYscale, lastDragY[1]) : null"
+        }
+      ],
+      "axes": [
+        {
+          "orient": "bottom", "scale": "sXZ", 
+          "title": "", "domain": false, "ticks": false, "labels": false, "grid": true, "gridOpacity": {"signal": "idInteractive === 'Z' ? 1 : 0"}, "zindex": 1, "values": {"signal": "XZ_ticks"}
+        },
+        {
+          "orient": "bottom", "scale": "interpolatedSXZ", 
+          "title": "", "domain": false, "ticks": false, "labels": false, "grid": true, "gridOpacity": {"signal": "idInteractive === 'Z' ? 0 : 1"}, "zindex": 1, "values": {"signal": "interpolated_XZ_ticks"}
+        },
+        {
+          "orient": "left", "scale": "sYZ",
+          "title": "", "domain": false, "values": {"signal": "YZ_ticks"}, "ticks": false, "labels": false, "grid": true, "gridOpacity": {"signal": "idInteractive === 'Z' ? 1 : 0"}, "zindex": 1
+        },
+        {
+          "orient": "left", "scale": "interpolatedSYZ",
+          "title": "", "domain": false, "values": {"signal": "interpolated_YZ_ticks"}, "ticks": false, "labels": false, "grid": true, "gridOpacity": {"signal": "idInteractive === 'Z' ? 0 : 1"}, "zindex": 1
+        }
+      ],
+      "marks": [
+        {
+          "type": "rect",
+          "zindex": 0,
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "fill": {"value": "%23eee"}
+            },
+            "update": {
+              "opacity": {"signal":"(idInteractive === 'Z' ? !isStartZ : !interpolatedIsStartZ) ? 1 : 0"},
+              "x": {"signal": "lastDragX1"},
+              "x2": {"signal": "lastDragX2"},
+              "y": {"signal": "lastDragY1"},
+              "y2": {"signal": "lastDragY2"}
+            }
+          }
+        },
+        {
+          "type": "line",
+          "zindex": 2,
+          "from": {"data": "main_data"},
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "fillOpacity": {"value": 0.5},
+              "size": {"value": 32}
+            },
+            "update": {
+              "x": {
+                "scale": {"signal": "idInteractive === 'Z' ? cellMeta.Z.xscale : cellMeta.Z.interpolatedXscale"},
+                "field": {"signal": "XName"}
+              },
+              "y": {
+                "scale": {"signal": "idInteractive === 'Z' ? cellMeta.Z.yscale : cellMeta.Z.interpolatedYscale"},
+                "field": {"signal": "YName"}
+              },
+              "opacity": [
+                { "value": 1 }
+              ]
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "name": "drag",
+          "interactive": {"signal": "true"},
+          "encode": {
+            "enter": {
+              "fill": {"value": "transparent"}
+            },
+            "update": {
+              "x": {"signal": "0"},
+              "x2": {"signal": "XSize[1]"},
+              "y": {"signal": "0"},
+              "y2": {"signal": "YSize[1]"}
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "height": {"signal": "bigWidth"},
+              "fill": {"value": "steelblue"}
+            },
+            "update": {
+              "opacity": {"signal": "(idInteractive === 'Z' ? !isStartZ : !interpolatedIsStartZ) ? 1 : 0"},
+              "width": {"signal": "lastDragX2 - lastDragX1"},
+              "x": {"signal": "lastDragX1"},
+              "y": {"signal": "lastDragY1 - bigWidth"} 
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "height": {"signal": "bigWidth"},
+              "fill": {"value": "steelblue"}
+            },
+            "update": {
+              "opacity": {"signal": "(idInteractive === 'Z' ? !isStartZ : !interpolatedIsStartZ) ? 1 : 0"},
+              "width": {"signal": "lastDragX2 - lastDragX1"},
+              "x": {"signal": "lastDragX1"},
+              "y": {"signal": "lastDragY2"} 
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "width": {"signal": "bigWidth"},
+              "fill": {"value": "steelblue"}
+            },
+            "update": {
+              "opacity": {"signal": "(idInteractive === 'Z' ? !isStartZ : !interpolatedIsStartZ) ? 1 : 0"},
+              "height": {"signal": "lastDragY2 - lastDragY1"},
+              "x": {"signal": "lastDragX1"},
+              "y": {"signal": "lastDragY1"} 
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "width": {"signal": "bigWidth"},
+              "fill": {"value": "steelblue"}
+            },
+            "update": {
+              "opacity": {"signal": "(idInteractive === 'Z' ? !isStartZ : !interpolatedIsStartZ) ? 1 : 0"},
+              "height": {"signal": "lastDragY2 - lastDragY1"},
+              "x": {"signal": "lastDragX2 - bigWidth"},
+              "y": {"signal": "lastDragY1"} 
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "controlX",
+      "type": "group",
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "fill": {"value": "transparent"},
+          "clip": {"value": true},
+          "stroke": { "value": "%23999" },
+          "strokeWidth": { "value": 0 }
+        },
+        "update": {
+          "x": {"signal": "XPad[0] + deltaCanvasSavior[0] + XSize[0]"},
+          "y": {"signal": "YPos[0] + deltaCanvasSavior[1] + YSize[0]"},
+          "width": {"signal": "XPad[1]"},
+          "height": {"signal": "YPad[0]"}
+        }
+      },
+      "marks": [
+        {
+          "type": "rect",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "fill": {"value": "steelblue"},
+              "cornerRadius": { "value": 5 }
+            },
+            "update": {
+              "width": {"signal": "buttonSize - 4"},
+              "height": {"signal": "buttonSize - 4"},
+              "x": {"signal": "XPad[1] - buttonSize + 2"},
+              "y": {"signal": "2"}
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "name": "cX",
+          "interactive": true,
+          "encode": {
+            "enter": {
+              "fill": {"value": "steelblue"},
+              "cornerRadius": { "value": 5 }
+            },
+            "update": {
+              "width": {"signal": "buttonSize - 4"},
+              "height": {"signal": "buttonSize - 4"},
+              "x": {"signal": "XPad[1] - buttonSize + 2"},
+              "y": {"signal": "2"}
+            }
+          }
+        },
+        {
+          "type": "image",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "url": {
+                "value": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CgogPGc+CiAgPHRpdGxlPkxheWVyIDE8L3RpdGxlPgogIDxwYXRoIHRyYW5zZm9ybT0icm90YXRlKDkwIDEyIDExLjk2ODUpIiBpZD0ic3ZnXzEiIGQ9Im02LjI2LDEzLjI0YTEuMDUsMS4wNSAwIDEgMSAxLjQ4LC0xLjQ4bDQuMjYsNC4yNmw0LjI2LC00LjI2YTEuMDUsMS4wNSAwIDEgMSAxLjQ4LDEuNDhsLTUsNWMtMC40LDAuNDEgLTEuMDcsMC40MSAtMS40OCwwbC01LC01em0wLC02YTEuMDUsMS4wNSAwIDEgMSAxLjQ4LC0xLjQ4bDQuMjYsNC4yNmw0LjI2LC00LjI2YTEuMDUsMS4wNSAwIDEgMSAxLjQ4LDEuNDhsLTUsNWMtMC40LDAuNDEgLTEuMDcsMC40MSAtMS40OCwwbC01LC01eiIvPgogPC9nPgo8L3N2Zz4="
+              }
+            },
+            "update": {
+              "opacity": {"signal": "sizes.state === 'XYZ' || sizes.state === 'XZ' || sizes.state === 'Z' ? 1 : 0"},
+              "x": {"signal": "XPad[1] - buttonSize + 4 "},
+              "y": {"signal": "5"},
+              "width": { "signal": "buttonSize - 8" },
+              "height": { "signal": "buttonSize - 8" }
+            }
+          }
+        },
+        {
+          "type": "image",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "url": {
+                "value": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CgogPGc+CiAgPHRpdGxlPkxheWVyIDE8L3RpdGxlPgogIDxwYXRoIHRyYW5zZm9ybT0icm90YXRlKC05MCAxMiAxMS45Njg1KSIgaWQ9InN2Z18xIiBkPSJtNi4yNiwxMy4yNGExLjA1LDEuMDUgMCAxIDEgMS40OCwtMS40OGw0LjI2LDQuMjZsNC4yNiwtNC4yNmExLjA1LDEuMDUgMCAxIDEgMS40OCwxLjQ4bC01LDVjLTAuNCwwLjQxIC0xLjA3LDAuNDEgLTEuNDgsMGwtNSwtNXptMCwtNmExLjA1LDEuMDUgMCAxIDEgMS40OCwtMS40OGw0LjI2LDQuMjZsNC4yNiwtNC4yNmExLjA1LDEuMDUgMCAxIDEgMS40OCwxLjQ4bC01LDVjLTAuNCwwLjQxIC0xLjA3LDAuNDEgLTEuNDgsMGwtNSwtNXoiLz4KIDwvZz4KPC9zdmc+"
+              }
+            },
+            "update": {
+              "x": {"signal": "XPad[1] - buttonSize + 4 "},
+              "y": {"signal": "5"},
+              "width": { "signal": "buttonSize - 8" },
+              "height": { "signal": "buttonSize - 8" },
+              "opacity": {"signal": "sizes.state === 'YZ' ? 1 : 0"}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "controlY",
+      "type": "group",
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "fill": {"value": "transparent"},
+          "clip": {"value": true},
+          "stroke": { "value": "%23999" },
+          "strokeWidth": { "value": 0 }
+        },
+        "update": {
+          "x": {"signal": "deltaCanvasSavior[0]"},
+          "y": {"signal": "YSize[1] + deltaCanvasSavior[1]"},
+          "width": {"signal": "XPad[0]"},
+          "height": {"signal": "YPad[1]"}
+        }
+      },
+      "marks": [
+        {
+          "type": "rect",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "fill": {"value": "steelblue"},
+              "cornerRadius": { "value": 5 }
+            },
+            "update": {
+              "width": {"signal": "buttonSize - 4"},
+              "height": {"signal": "buttonSize - 4"},
+              "x": {"signal": "XPad[0] - buttonSize + 2"},
+              "y": {"signal": "2"}
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "name": "cY",
+          "interactive": true,
+          "encode": {
+            "enter": {
+              "fill": {"value": "transparent"},
+              "cornerRadius": { "value": 5 }
+            },
+            "update": {
+              "width": {"signal": "buttonSize - 4"},
+              "height": {"signal": "buttonSize - 4"},
+              "x": {"signal": "XPad[0] - buttonSize + 2"},
+              "y": {"signal": "2"}
+            }
+          }
+        },
+        {
+          "type": "image",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "url": {
+                "value": "data:image/svg+xml;base64, PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNNi4yNiAxMy4yNGExLjA1IDEuMDUgMCAxIDEgMS40OC0xLjQ4TDEyIDE2LjAybDQuMjYtNC4yNmExLjA1IDEuMDUgMCAxIDEgMS40OCAxLjQ4bC01IDVjLS40LjQxLTEuMDcuNDEtMS40OCAwem0wLTZhMS4wNSAxLjA1IDAgMSAxIDEuNDgtMS40OEwxMiAxMC4wMmw0LjI2LTQuMjZhMS4wNSAxLjA1IDAgMSAxIDEuNDggMS40OGwtNSA1Yy0uNC40MS0xLjA3LjQxLTEuNDggMHoiLz48L3N2Zz4="
+              }
+            },
+            "update": {
+              "opacity": {"signal": "sizes.state === 'XYZ' || sizes.state === 'YZ' || sizes.state === 'Z' ? 1 : 0"},
+              "x": {"signal": "XPad[0] - buttonSize + 4 "},
+              "y": {"signal": "4"},
+              "width": { "signal": "buttonSize - 8" },
+              "height": { "signal": "buttonSize - 8" }
+            }
+          }
+        },
+        {
+          "type": "image",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "url": {
+                "value": "data:image/svg+xml;base64, PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CgogPGc+CiAgPHRpdGxlPkxheWVyIDE8L3RpdGxlPgogIDxwYXRoIHRyYW5zZm9ybT0icm90YXRlKDE4MCAxMiAxMS45Njg1KSIgaWQ9InN2Z18xIiBkPSJtNi4yNiwxMy4yNGExLjA1LDEuMDUgMCAxIDEgMS40OCwtMS40OGw0LjI2LDQuMjZsNC4yNiwtNC4yNmExLjA1LDEuMDUgMCAxIDEgMS40OCwxLjQ4bC01LDVjLTAuNCwwLjQxIC0xLjA3LDAuNDEgLTEuNDgsMGwtNSwtNXptMCwtNmExLjA1LDEuMDUgMCAxIDEgMS40OCwtMS40OGw0LjI2LDQuMjZsNC4yNiwtNC4yNmExLjA1LDEuMDUgMCAxIDEgMS40OCwxLjQ4bC01LDVjLTAuNCwwLjQxIC0xLjA3LDAuNDEgLTEuNDgsMGwtNSwtNXoiLz4KIDwvZz4KPC9zdmc+"
+              }
+            },
+            "update": {
+              "opacity": {"signal": "sizes.state === 'XZ' ? 1 : 0"},
+              "x": {"signal": "XPad[0] - buttonSize + 4 "},
+              "y": {"signal": "4"},
+              "width": { "signal": "buttonSize - 8" },
+              "height": { "signal": "buttonSize - 8" }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "controlXY",
+      "type": "group",
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "fill": {"value": "transparent"},
+          "clip": {"value": true},
+          "stroke": { "value": "%23999" },
+          "strokeWidth": { "value": 0 }
+        },
+        "update": {
+          "x": {"signal": "XPad[0] + deltaCanvasSavior[0] + XSize[0]"},
+          "y": {"signal": "YSize[1] + deltaCanvasSavior[1]"},
+          "width": {"signal": "XPad[1]"},
+          "height": {"signal": "YPad[1]"}
+        }
+      },
+      "marks": [
+        {
+          "type": "rect",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "fill": {"value": "steelblue"},
+              "cornerRadius": { "value": 5 }
+            },
+            "update": {
+              "width": {"signal": "buttonSize - 4"},
+              "height": {"signal": "buttonSize - 4"},
+              "x": {"signal": "XPad[1] - buttonSize + 2"},
+              "y": {"signal": "2"}
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "name": "cXY",
+          "interactive": true,
+          "encode": {
+            "enter": {
+              "fill": {"value": "transparent"},
+              "cornerRadius": { "value": 5 }
+            },
+            "update": {
+              "width": {"signal": "buttonSize - 4"},
+              "height": {"signal": "buttonSize - 4"},
+              "x": {"signal": "XPad[1] - buttonSize + 2"},
+              "y": {"signal": "2"}
+            }
+          }
+        },
+        {
+          "type": "image",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "url": {
+                "value": "data:image/svg+xml;base64, PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiA8Zz4KICA8dGl0bGU+TGF5ZXIgMTwvdGl0bGU+CiAgPHBhdGggZD0ibTYuMjYsMTMuMjRhMS4wNSwxLjA1IDAgMSAxIDEuNDgsLTEuNDhsNC4yNiw0LjI2bDQuMjYsLTQuMjZhMS4wNSwxLjA1IDAgMSAxIDEuNDgsMS40OGwtNSw1Yy0wLjQsMC40MSAtMS4wNywwLjQxIC0xLjQ4LDBsLTUsLTV6bTAsLTZhMS4wNSwxLjA1IDAgMSAxIDEuNDgsLTEuNDhsNC4yNiw0LjI2bDQuMjYsLTQuMjZhMS4wNSwxLjA1IDAgMSAxIDEuNDgsMS40OGwtNSw1Yy0wLjQsMC40MSAtMS4wNywwLjQxIC0xLjQ4LDBsLTUsLTV6IiBpZD0ic3ZnXzEiIHRyYW5zZm9ybT0icm90YXRlKC0xMzUgMTIgMTEuOTY4NSkiLz4KIDwvZz4KCjwvc3ZnPg=="
+              }
+            },
+            "update": {
+              "opacity": {"signal": "sizes.state === 'Z' ? 1 : 0"},
+              "x": {"signal": "XPad[1] - buttonSize + 5 "},
+              "y": {"signal": "2"},
+              "width": { "signal": "buttonSize - 8" },
+              "height": { "signal": "buttonSize - 8" }
+            }
+          }
+        },
+        {
+          "type": "image",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "url": {
+                "value": "data:image/svg+xml;base64, PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTIxIDhhMSAxIDAgMCAwIDEtMVYzYTEgMSAwIDAgMC0uMDgtLjM4IDEgMSAwIDAgMC0uNTQtLjU0QTEgMSAwIDAgMCAyMSAyaC00YTEgMSAwIDAgMCAwIDJoMS41OUwxMiAxMC41OSA1LjQxIDRIN2ExIDEgMCAwIDAgMC0ySDNhMSAxIDAgMCAwLS4zOC4wOCAxIDEgMCAwIDAtLjU0LjU0QTEgMSAwIDAgMCAyIDN2NGExIDEgMCAwIDAgMiAwVjUuNDFMMTAuNTkgMTIgNCAxOC41OVYxN2ExIDEgMCAwIDAtMiAwdjRhMSAxIDAgMCAwIC4wOC4zOCAxIDEgMCAwIDAgLjU0LjU0QTEgMSAwIDAgMCAzIDIyaDRhMSAxIDAgMCAwIDAtMkg1LjQxTDEyIDEzLjQxIDE4LjU5IDIwSDE3YTEgMSAwIDAgMCAwIDJoNGExIDEgMCAwIDAgLjM4LS4wOCAxIDEgMCAwIDAgLjU0LS41NEExIDEgMCAwIDAgMjIgMjF2LTRhMSAxIDAgMCAwLTIgMHYxLjU5TDEzLjQxIDEyIDIwIDUuNDFWN2ExIDEgMCAwIDAgMSAxIi8+PC9zdmc+"
+              }
+            },
+            "update": {
+              "opacity": {"signal": "sizes.state === 'XYZ' ? 1 : 0"},
+              "x": {"signal": "XPad[1] - buttonSize + 4 "},
+              "y": {"signal": "4"},
+              "width": { "signal": "buttonSize - 8" },
+              "height": { "signal": "buttonSize - 8" }
+            }
+          }
+        },
+        {
+          "type": "image",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "url": {
+                "value": "data:image/svg+xml;base64, PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgaWQ9Imhvcml6b250YWwtbWF4aW1pemUiPgogIDxwYXRoIGQ9Ik0yMS45MiwxMS42MmExLDEsMCwwLDAtLjIxLS4zM2wtNC00YTEsMSwwLDEsMC0xLjQyLDEuNDJMMTguNTksMTFINS40MWwyLjMtMi4yOUExLDEsMCwxLDAsNi4yOSw3LjI5bC00LDRhMSwxLDAsMCwwLS4yMS4zMywxLDEsMCwwLDAsMCwuNzYsMSwxLDAsMCwwLC4yMS4zM2w0LDRhMSwxLDAsMCwwLDEuNDIsMCwxLDEsMCwwLDAsMC0xLjQyTDUuNDEsMTNIMTguNTlsLTIuMywyLjI5YTEsMSwwLDAsMCwwLDEuNDIsMSwxLDAsMCwwLDEuNDIsMGw0LTRhMSwxLDAsMCwwLC4yMS0uMzNBMSwxLDAsMCwwLDIxLjkyLDExLjYyWiI+PC9wYXRoPgo8L3N2Zz4K"
+              }
+            },
+            "update": {
+              "opacity": {"signal": "sizes.state === 'XZ' ? 1 : 0"},
+              "x": {"signal": "XPad[1] - buttonSize + 4 "},
+              "y": {"signal": "4"},
+              "width": { "signal": "buttonSize - 8" },
+              "height": { "signal": "buttonSize - 8" }
+            }
+          }
+        },
+        {
+          "type": "image",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "url": {
+                "value": "data:image/svg+xml;base64, PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTE1LjI5IDE2LjI5IDEzIDE4LjU5VjUuNDFsMi4yOSAyLjNhMSAxIDAgMCAwIDEuNDIgMCAxIDEgMCAwIDAgMC0xLjQybC00LTRhMSAxIDAgMCAwLS4zMy0uMjEgMSAxIDAgMCAwLS43NiAwIDEgMSAwIDAgMC0uMzMuMjFsLTQgNGExIDEgMCAxIDAgMS40MiAxLjQyTDExIDUuNDF2MTMuMThsLTIuMjktMi4zYTEgMSAwIDEgMC0xLjQyIDEuNDJsNCA0YTEgMSAwIDAgMCAuMzMuMjEgMSAxIDAgMCAwIC43NiAwIDEgMSAwIDAgMCAuMzMtLjIxbDQtNGExIDEgMCAwIDAtMS40Mi0xLjQyIi8+PC9zdmc+"
+              }
+            },
+            "update": {
+              "opacity": {"signal": "sizes.state === 'YZ' ? 1 : 0"},
+              "x": {"signal": "XPad[1] - buttonSize + 4 "},
+              "y": {"signal": "4"},
+              "width": { "signal": "buttonSize - 8" },
+              "height": { "signal": "buttonSize - 8" }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "controlZ",
+      "type": "group",
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "fill": {"value": "transparent"},
+          "clip": {"value": true},
+          "stroke": { "value": "%23999" },
+          "strokeWidth": { "value": 0 }
+        },
+        "update": {
+          "x": {"signal": "deltaCanvasSavior[0]"},
+          "y": {"signal": "YPos[0] + deltaCanvasSavior[1] + YSize[0]"},
+          "width": {"signal": "XPad[0]"},
+          "height": {"signal": "YPad[0]"}
+        }
+      },
+      "marks": [
+        {
+          "type": "rect",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "fill": {"value": "steelblue"},
+              "cornerRadius": { "value": 5 }
+            },
+            "update": {
+              "width": {"signal": "buttonSize - 4"},
+              "height": {"signal": "buttonSize - 4"},
+              "x": {"signal": "XPad[0] - buttonSize + 2"},
+              "y": {"signal": "2"}
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "name": "cZ",
+          "interactive": true,
+          "encode": {
+            "enter": {
+              "fill": {"value": "steelblue"},
+              "cornerRadius": { "value": 5 }
+            },
+            "update": {
+              "width": {"signal": "buttonSize - 4"},
+              "height": {"signal": "buttonSize - 4"},
+              "x": {"signal": "XPad[0] - buttonSize + 2"},
+              "y": {"signal": "2"}
+            }
+          }
+        },
+        {
+          "type": "image",
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "url": {
+                "value": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiA8Zz4KICA8dGl0bGU+TGF5ZXIgMTwvdGl0bGU+CiAgPHBhdGggZD0ibTYuMjYsMTMuMjRhMS4wNSwxLjA1IDAgMSAxIDEuNDgsLTEuNDhsNC4yNiw0LjI2bDQuMjYsLTQuMjZhMS4wNSwxLjA1IDAgMSAxIDEuNDgsMS40OGwtNSw1Yy0wLjQsMC40MSAtMS4wNywwLjQxIC0xLjQ4LDBsLTUsLTV6bTAsLTZhMS4wNSwxLjA1IDAgMSAxIDEuNDgsLTEuNDhsNC4yNiw0LjI2bDQuMjYsLTQuMjZhMS4wNSwxLjA1IDAgMSAxIDEuNDgsMS40OGwtNSw1Yy0wLjQsMC40MSAtMS4wNywwLjQxIC0xLjQ4LDBsLTUsLTV6IiBpZD0ic3ZnXzEiIHRyYW5zZm9ybT0icm90YXRlKDQ1IDEyIDExLjk2ODUpIi8+CiA8L2c+Cgo8L3N2Zz4="
+              }
+            },
+            "update": {
+              "opacity": {"signal": "1"},
+              "x": {"signal": "XPad[0] - buttonSize + 3 "},
+              "y": {"signal": "6"},
+              "width": { "signal": "buttonSize - 8" },
+              "height": { "signal": "buttonSize - 8" }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "interactive": false,
+      "name": "legend",
+      "encode": {
+        "enter": {
+          "clip": {"value": true}
+        },
+        "update": {
+          "x": {"signal": "W + deltaCanvasSavior[0] + 3"},
+          "y": {"signal": "deltaCanvasSavior[1]"},
+          "width": {"signal": "legendW"},
+          "height": {"signal": "legendH"}
+        }
+      },
+      "legends": [
+        {
+          "fill": "color",
+          "orient": "none",
+          "legendX": 0,
+          "legendY": 0,
+          "title": "Species",
+          "offset": 0,
+          "encode": {
+            "symbols": {
+              "update": {
+                "fillOpacity": {"value": 0.5},
+                "stroke": {"value": "transparent"}
+              }
+            }
+          }
+        }
+      ],
+      "marks": [
+        {
+          "type": "image",
+          "interactive": true,
+          "encode": {
+            "enter": {
+              "url": {
+                "value": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbDpzcGFjZT0icHJlc2VydmUiIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIj48cGF0aCBkPSJNNDQ4IDI0OCAyODggOTZ2ODUuMzNDMTM4LjY3IDIwMi42NyA4NS4zMyAzMDkuMzMgNjQgNDE2YzUzLjMzLTc0LjY3IDExNy4zMy0xMDguOCAyMjQtMTA4Ljh2ODcuNDd6Ii8+PC9zdmc+"
+              }
+            },
+            "update": {
+              "href": {"value": "https://www.freeformatter.com/json-escape.html"},
+              "opacity": {"signal": "1"},
+              "x": {"signal": "legendW - buttonSize"},
+              "y": {"signal": "legendH - buttonSize"},
+              "width": { "signal": "buttonSize - 8" },
+              "height": { "signal": "buttonSize - 8" }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "name": "other",
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "clip": {"value": true}
+        },
+        "update": {
+          "x": {"signal": "W + deltaCanvasSavior[0] + 3"},
+          "y": {"signal": "deltaCanvasSavior[1]+legendH"},
+          "width": {"signal": "legendW"},
+          "height": {"signal": "otherH"}
+        }
+      },
+      "marks": [
+        {
+          "type": "image",
+          "interactive": true,
+          "encode": {
+            "enter": {
+              "url": {
+                "value": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbDpzcGFjZT0icHJlc2VydmUiIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIj48cGF0aCBkPSJNNDQ4IDI0OCAyODggOTZ2ODUuMzNDMTM4LjY3IDIwMi42NyA4NS4zMyAzMDkuMzMgNjQgNDE2YzUzLjMzLTc0LjY3IDExNy4zMy0xMDguOCAyMjQtMTA4Ljh2ODcuNDd6Ii8+PC9zdmc+"
+              }
+            },
+            "update": {
+              "opacity": {"signal": "1"},
+              "x": {"signal": "legendW - buttonSize"},
+              "y": {"signal": "otherH - buttonSize"},
+              "width": { "signal": "buttonSize - 8" },
+              "height": { "signal": "buttonSize - 8" },
+              "href": {"value": "https://example.com"}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "sXaxis",
+      "type": "group",
+      "encode": {
+        "enter": {
+          "clip": {"value": true}
+        },
+        "update": {
+          "x": {"signal": "XPad[0] + deltaCanvasSavior[0]"},
+          "y": {"signal": "YStep[1] + deltaCanvasSavior[1] + YSize[0]"},
+          "width": {"signal": "XSize[0]"},
+          "height": {"signal": "YPad[0]"}
+        }
+      },
+      "axes": [
+        {
+          "orient": "bottom", "scale": "sX",
+          "values": {"signal": "X_ticks"}, "offset": {"signal": "-YPad[0]"}, "domain": false, "format": {"signal": "X_digits_after_dot ? X_format : ''"},
+          "tickOpacity": {"signal": "idInteractive === 'XY' ? 1 : 0"},
+          "labelOpacity": {"signal": "idInteractive === 'XY' ? 1 : 0"}
+        },
+        {
+          "orient": "bottom", "scale": "interpolatedSX", "values": {"signal": "interpolated_X_ticks"}, "offset": {"signal": "-YPad[0]"}, "domain": false, "format": {"signal": "interpolated_X_digits_after_dot ? interpolated_X_format : ''"},
+          "tickOpacity": {"signal": "idInteractive === 'XY' ? 0 : 1"},
+          "labelOpacity": {"signal": "idInteractive === 'XY' ? 0 : 1"}
+        }
+      ]
+    },
+    {
+      "name": "sYaxis",
+      "type": "group",
+      "encode": {
+        "enter": {
+          "clip": {"value": true}
+        },
+        "update": {
+          "x": {"signal": "deltaCanvasSavior[0]"},
+          "y": {"signal": "YPos[0] + deltaCanvasSavior[1]"},
+          "width": {"signal": "XPad[0]"},
+          "height": {"signal": "YSize[0]"}
+        }
+      },
+      "axes": [
+        {
+          "orient": "left", "scale": "sY", "minExtent": {"signal": "tickSize+symbolPixels"}, "labelLimit": {"signal": "XPad[0] - XTS - tickSize"},
+          "domain": false, "values": {"signal": "Y_ticks"}, "offset": {"signal": "-XPad[0]"}, "format": {"signal": "Y_digits_after_dot ? Y_format : ''"},
+          "tickOpacity": {"signal": "idInteractive === 'XY' ? 1 : 0"},
+          "labelOpacity": {"signal": "idInteractive === 'XY' ? 1 : 0"}
+        },
+        {
+          "orient": "left", "scale": "interpolatedSY", "minExtent": {"signal": "tickSize+symbolPixels"}, "labelLimit": {"signal": "XPad[0] - XTS - tickSize"},
+          "domain": false, "values": {"signal": "interpolated_Y_ticks"}, "offset": {"signal": "-XPad[0]"}, "format": {"signal": "interpolated_Y_digits_after_dot ? interpolated_Y_format : ''"},
+          "tickOpacity": {"signal": "idInteractive === 'XY' ? 0 : 1"},
+          "labelOpacity": {"signal": "idInteractive === 'XY' ? 0 : 1"}
+        }
+      ]
+    },
+    {
+      "name": "sXDZaxis",
+      "type": "group",
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "clip": {"value": true}
+        },
+        "update": {
+          "x": {"signal": "XPad[0] + deltaCanvasSavior[0]"},
+          "y": {"signal": "YSize[1] + deltaCanvasSavior[1]"},
+          "width": {"signal": "XSize[0]"},
+          "height": {"signal": "YPad[1]"}
+        }
+      },
+      "axes": [
+        {
+          "orient": "bottom", "scale": "sX",
+          "values": {"signal": "oldStateSizes === 'XYZ' ? [] : X_ticks"}, "offset": {"signal": "-YPad[1]"}, "domain": false, "format": {"signal": "X_digits_after_dot ? X_format : ''"},
+          "tickOpacity": {"signal": "oldStateSizes === 'XZ' ? (idInteractive === 'Y' ? 1 : 0) : 0"},
+          "labelOpacity": {"signal": "oldStateSizes === 'XZ' ? (idInteractive === 'Y' ? 1 : 0) : 0"}
+        },
+        {
+          "orient": "bottom", "scale": "interpolatedSX", "values": {"signal": "oldStateSizes === 'XYZ' ? [] : interpolated_X_ticks"}, "offset": {"signal": "-YPad[1]"}, "domain": false, "format": {"signal": "interpolated_X_digits_after_dot ? interpolated_X_format : ''"},
+          "tickOpacity": {"signal": "oldStateSizes === 'XZ' ? (idInteractive === 'Y' ? 0 : 1) : 0"},
+          "labelOpacity": {"signal": "oldStateSizes === 'XZ' ? (idInteractive === 'Y' ? 0 : 1) : 0"}
+        }
+      ]
+    },
+    {
+      "name": "sYDZaxis",
+      "type": "group",
+      "encode": {
+        "enter": {
+          "clip": {"value": true}
+        },
+        "update": {
+          "x": {"signal": "XPad[0] + deltaCanvasSavior[0] + XSize[0]"},
+          "y": {"signal": "YPos[0] + deltaCanvasSavior[1]"},
+          "width": {"signal": "XPad[1]"},
+          "height": {"signal": "YSize[0]"}
+        }
+      },
+      "axes": [
+        {
+          "orient": "left", "scale": "sY", "minExtent": {"signal": "tickSize+symbolPixels"}, "labelLimit": {"signal": "XPad[1] - XTS - tickSize"},
+          "domain": false, "values": {"signal": "oldStateSizes === 'XYZ' ? [] : Y_ticks"}, "offset": {"signal": "-XPad[1]"}, "format": {"signal": "Y_digits_after_dot ? Y_format : ''"},
+          "tickOpacity": {"signal": "oldStateSizes === 'YZ' ? (idInteractive === 'X' ? 1 : 0) : 0"},
+          "labelOpacity": {"signal": "oldStateSizes === 'YZ' ? (idInteractive === 'X' ? 1 : 0) : 0"}
+        },
+        {
+          "orient": "left", "scale": "interpolatedSY", "minExtent": {"signal": "tickSize+symbolPixels"}, "labelLimit": {"signal": "XPad[1] - XTS - tickSize"},
+          "domain": false, "values": {"signal": "oldStateSizes === 'XYZ' ? [] : interpolated_Y_ticks"}, "offset": {"signal": "-XPad[1]"}, "format": {"signal": "interpolated_Y_digits_after_dot ? interpolated_Y_format : ''"},
+          "tickOpacity": {"signal": "oldStateSizes === 'YZ' ? (idInteractive === 'X' ? 0 : 1) : 0"},
+          "labelOpacity": {"signal": "oldStateSizes === 'YZ' ? (idInteractive === 'X' ? 0 : 1) : 0"}
+        }
+      ]
+    },
+    {
+      "name": "sXDaxis",
+      "type": "group",
+      "encode": {
+        "enter": {
+          "clip": {"value": true}
+        },
+        "update": {
+          "x": {"signal": "XPad[0] + deltaCanvasSavior[0] + XStep[0]"},
+          "y": {"signal": "YStep[1] + deltaCanvasSavior[1] + YSize[0]"},
+          "width": {"signal": "XSize[1]"},
+          "height": {"signal": "YPad[0]"}
+        }
+      },
+      "axes": [
+        {
+          "orient": "bottom", "scale": "sXD",
+          "title": {"signal": "XName"}, "values": {"signal": "XD_ticks"}, "offset": {"signal": "-YPad[0]"}, "domain": false, "format": {"signal": "XD_digits_after_dot ? XD_format : ''"},
+          "tickOpacity": {"signal": "idInteractive === 'X' ? 1 : 0"},
+          "labelOpacity": {"signal": "idInteractive === 'X' ? 1 : 0"},
+          "titleOpacity": {"signal": "idInteractive === 'X' ? 1 : 0"}
+        },
+        {
+          "orient": "bottom", "scale": "interpolatedSXD", "title": {"signal": "XName"}, "values": {"signal": "interpolated_XD_ticks"}, "offset": {"signal": "-YPad[0]"}, "domain": false, "format": {"signal": "interpolated_XD_digits_after_dot ? interpolated_XD_format : ''"},
+          "tickOpacity": {"signal": "idInteractive === 'X' ? 0 : 1"},
+          "labelOpacity": {"signal": "idInteractive === 'X' ? 0 : 1"},
+          "titleOpacity": {"signal": "idInteractive === 'X' ? 0 : 1"}
+        }
+      ]
+    },
+    {
+      "name": "sYDaxis",
+      "type": "group",
+      "encode": {
+        "enter": {
+          "clip": {"value": true}
+        },
+        "update": {
+          "x": {"signal": "deltaCanvasSavior[0]"},
+          "y": {"signal": "YPos[1] + deltaCanvasSavior[1]"},
+          "width": {"signal": "XPad[0]"},
+          "height": {"signal": "YSize[1]"}
+        }
+      },
+      "axes": [
+        {
+          "orient": "left", "scale": "sYD", "minExtent": {"signal": "tickSize+symbolPixels"}, "titlePadding": {"value": 1}, "labelLimit": {"signal": "XPad[0] - XTS - tickSize"},
+          "title": {"signal": "YName"},  "domain": false, "values": {"signal": "YD_ticks"}, "offset": {"signal": "-XPad[0]"}, "format": {"signal": "YD_digits_after_dot ? YD_format : ''"},
+          "tickOpacity": {"signal": "idInteractive === 'Y' ? 1 : 0"},
+          "labelOpacity": {"signal": "idInteractive === 'Y' ? 1 : 0"},
+          "titleOpacity": {"signal": "idInteractive === 'Y' ? 1 : 0"}
+        },
+        {
+          "orient": "left", "scale": "interpolatedSYD", "minExtent": {"signal": "tickSize+symbolPixels"}, "titlePadding": {"value": 1},"labelLimit": {"signal": "XPad[0] - XTS - tickSize"},
+          "title": {"signal": "YName"}, "domain": false, "values": {"signal": "interpolated_YD_ticks"}, "offset": {"signal": "-XPad[0]"}, "format": {"signal": "interpolated_YD_digits_after_dot ? interpolated_YD_format : ''"},
+          "tickOpacity": {"signal": "idInteractive === 'Y' ? 0 : 1"},
+          "labelOpacity": {"signal": "idInteractive === 'Y' ? 0 : 1"},
+          "titleOpacity": {"signal": "idInteractive === 'Y' ? 0 : 1"}
+        }
+      ]
+    },
+    {
+      "name": "sXZaxis",
+      "type": "group",
+      "encode": {
+        "enter": {
+          "clip": {"value": true}
+        },
+        "update": {
+          "x": {"signal": "XPad[0] + deltaCanvasSavior[0] + XStep[0]"},
+          "y": {"signal": "YSize[1] + deltaCanvasSavior[1]"},
+          "width": {"signal": "XSize[1]"},
+          "height": {"signal": "YPad[1]"}
+        }
+      },
+      "axes": [
+        {
+          "orient": "bottom", "scale": "sXZ", 
+          "title": {"signal": "idInteractive === 'Z' && (sizes.state === 'Z' || sizes.state === 'XZ') ? XName : ''"},
+          "values": {"signal": "XZ_ticks"}, "offset": {"signal": "-YPad[1]"}, "domain": false, "format": {"signal": "XZ_digits_after_dot ? XZ_format : ''"},
+          "tickOpacity": {"signal": "idInteractive === 'Z' ? 1 : 0"},
+          "labelOpacity": {"signal": "idInteractive === 'Z' ? 1 : 0"},
+          "titleOpacity": {"signal": "idInteractive === 'Z' && (oldStateSizes === 'Z' || oldStateSizes === 'XZ') ? 1 : 0"}
+        },
+        {
+          "orient": "bottom", "scale": "interpolatedSXZ", 
+          "title": {"signal": "idInteractive !== 'Z' && (sizes.state === 'Z' || sizes.state === 'XZ') ? XName : ''"}, "values": {"signal": "interpolated_XZ_ticks"}, "offset": {"signal": "-YPad[1]"}, "domain": false, "format": {"signal": "interpolated_XZ_digits_after_dot ? interpolated_XZ_format : ''"},
+          "tickOpacity": {"signal": "idInteractive === 'Z' ? 0 : 1"},
+          "labelOpacity": {"signal": "idInteractive === 'Z' ? 0 : 1"},
+          "titleOpacity": {"signal": "idInteractive !== 'Z' && (oldStateSizes === 'Z' || oldStateSizes === 'XZ') ? 1 : 0"}
+        }
+      ]
+    },
+    {
+      "name": "sYZaxis",
+      "type": "group",
+      "encode": {
+        "enter": {
+          "clip": {"value": true}
+        },
+        "update": {
+          "x": {"signal": "XPad[0] + deltaCanvasSavior[0] + XSize[0]"},
+          "y": {"signal": "YPos[1] + deltaCanvasSavior[1]"},
+          "width": {"signal": "XPad[1]"},
+          "height": {"signal": "YSize[1]"}
+        }
+      },
+      "axes": [
+        {
+          "orient": "left", "scale": "sYZ", "minExtent": {"signal": "tickSize+symbolPixels"}, "titlePadding": {"value": 1}, "labelLimit": {"signal": "XPad[1] - (oldStateSizes === 'YZ' || oldStateSizes === 'Z' ? XTS : 0) - tickSize"},
+          "title": {"signal": "idInteractive === 'Z' && (sizes.state === 'Z' || sizes.state === 'YZ') ? YName : ''"}, "domain": false, "values": {"signal": "YZ_ticks"}, "offset": {"signal": "-XPad[1]"},
+          "format": {"signal": "YZ_digits_after_dot ? YZ_format : ''"},
+          "tickOpacity": {"signal": "idInteractive === 'Z' ? 1 : 0"},
+          "labelOpacity": {"signal": "idInteractive === 'Z' ? 1 : 0"},
+          "titleOpacity": {"signal": "idInteractive === 'Z' && (oldStateSizes === 'Z' || oldStateSizes === 'YZ') ? 1 : 0"}
+        },
+        {
+          "orient": "left", "scale": "interpolatedSYZ", "minExtent": {"signal": "tickSize+symbolPixels"}, "titlePadding": {"value": 1}, "labelLimit": {"signal": "XPad[1] - (oldStateSizes === 'YZ' || oldStateSizes === 'Z' ? XTS : 0) - tickSize"},
+          "title": {"signal": "idInteractive !== 'Z' && (sizes.state === 'Z' || sizes.state === 'YZ') ? YName : ''"}, "domain": false, "values": {"signal": "interpolated_YZ_ticks"}, "offset": {"signal": "-XPad[1]"},
+          "format": {"signal": "interpolated_YZ_digits_after_dot ? interpolated_YZ_format : ''"},
+          "tickOpacity": {"signal": "idInteractive === 'Z' ? 0 : 1"},
+          "labelOpacity": {"signal": "idInteractive === 'Z' ? 0 : 1"},
+          "titleOpacity": {"signal": "idInteractive !== 'Z' && (oldStateSizes === 'Z' || oldStateSizes === 'YZ') ? 1 : 0"}
+        }
+      ]
+    }
+  ]
+};
+    vegaEmbed("%23vis", spec, { actions: false });
   </script>
 </body>
 </html>
