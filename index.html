@@ -16,7 +16,7 @@
       height: 98%;
     }
 
-    %23vis {
+    #vis {
       width: 98vw;
       height: 98vh;
     }
@@ -35,7 +35,7 @@
   
   "config": {
     "axis": {
-      "tickColor": "%23ccc",
+      "tickColor": "#ccc",
       "tickRound": true
     }
   },
@@ -2309,7 +2309,7 @@
           "text": {
             "signal": "isNumber(cell.x) && isNumber(cell.y) && cell.idInteractive ? text : ''"
           },
-          "fill": { "value": "%23333" },
+          "fill": { "value": "#333" },
           "fontSize": { "value": 12 },
           "font": {"value": "sans-serif"}
         }
@@ -2330,7 +2330,7 @@
           "height": {
             "signal": "textRectHeight"
           },
-          "fill": { "value": "%23FFEAA7" }
+          "fill": { "value": "#FFEAA7" }
         }
       }
     },
@@ -2346,7 +2346,7 @@
           "text": {
             "signal": "isArray(brushX) && isArray(brushY) && isMovingBrush && cell.idInteractive ? brush_text1 : ''"
           },
-          "fill": { "value": "%23333" },
+          "fill": { "value": "#333" },
           "fontSize": { "value": 12 },
           "font": {"value": "sans-serif"}
         }
@@ -2367,7 +2367,7 @@
           "height": {
             "signal": "brushTextRectHeight"
           },
-          "fill": { "value": "%23FFEAA7" }
+          "fill": { "value": "#FFEAA7" }
         }
       }
     },
@@ -2383,7 +2383,7 @@
           "text": {
             "signal": "isArray(brushX) && isArray(brushY) && isMovingBrush && cell.idInteractive ? brush_text2 : ''"
           },
-          "fill": { "value": "%23333" },
+          "fill": { "value": "#333" },
           "fontSize": { "value": 12 },
           "font": {"value": "sans-serif"}
         }
@@ -2404,7 +2404,7 @@
           "height": {
             "signal": "brushTextRectHeight"
           },
-          "fill": { "value": "%23FFEAA7" }
+          "fill": { "value": "#FFEAA7" }
         }
       }
     },
@@ -2415,7 +2415,7 @@
       "encode": {
         "enter": {
           "fill": {"value": "transparent"},
-          "stroke": {"value": "%23ddd"},
+          "stroke": {"value": "#ddd"},
           "clip": {"value": true}
         },
         "update": {
@@ -2505,7 +2505,7 @@
           "interactive": false,
           "encode": {
             "update": {
-              "fill": {"value": "%23eee"},
+              "fill": {"value": "#eee"},
               "opacity": {"signal": "(idInteractive === 'XY' ? isStart : interpolatedIsStart) ? 0 : 1"},
               "x": {"signal": "brushX1"},
               "x2": {"signal": "brushX2"},
@@ -2626,7 +2626,7 @@
       "encode": {
         "enter": {
           "fill": {"value": "transparent"},
-          "stroke": {"value": "%23ddd"},
+          "stroke": {"value": "#ddd"},
           "clip": {"value": true}
         },
         "update": {
@@ -2699,7 +2699,7 @@
           "interactive": false,
           "encode": {
             "update": {
-              "fill": {"value": "%23eee"},
+              "fill": {"value": "#eee"},
               "opacity": {"signal": "(idInteractive === 'X' ? isStartX : interpolatedIsStartX) ? 0 : 1"},
               "x": {"signal": "brushX1"},
               "x2": {"signal": "brushX2"},
@@ -2788,7 +2788,7 @@
       "encode": {
         "enter": {
           "fill": {"value": "transparent"},
-          "stroke": {"value": "%23ddd"},
+          "stroke": {"value": "#ddd"},
           "clip": {"value": true}
         },
         "update": {
@@ -2862,7 +2862,7 @@
           "interactive": false,
           "encode": {
             "update": {
-              "fill": {"value": "%23eee"},
+              "fill": {"value": "#eee"},
               "opacity": {"signal": "(idInteractive === 'Y' ? isStartY : interpolatedIsStartY) ? 0 : 1"},
               "x": {"signal": "brushX1"},
               "x2": {"signal": "brushX2"},
@@ -2951,7 +2951,7 @@
       "encode": {
         "enter": {
           "fill": {"value": "transparent"},
-          "stroke": {"value": "%23ddd"},
+          "stroke": {"value": "#ddd"},
           "clip": {"value": true}
         },
         "update": {
@@ -3009,7 +3009,7 @@
           "interactive": false,
           "encode": {
             "enter": {
-              "fill": {"value": "%23eee"}
+              "fill": {"value": "#eee"}
             },
             "update": {
               "opacity": {"signal":"(idInteractive === 'Z' ? !isStartZ : !interpolatedIsStartZ) ? 1 : 0"},
@@ -3135,7 +3135,7 @@
         "enter": {
           "fill": {"value": "transparent"},
           "clip": {"value": true},
-          "stroke": { "value": "%23999" },
+          "stroke": { "value": "#999" },
           "strokeWidth": { "value": 0 }
         },
         "update": {
@@ -3225,7 +3225,7 @@
         "enter": {
           "fill": {"value": "transparent"},
           "clip": {"value": true},
-          "stroke": { "value": "%23999" },
+          "stroke": { "value": "#999" },
           "strokeWidth": { "value": 0 }
         },
         "update": {
@@ -3315,7 +3315,7 @@
         "enter": {
           "fill": {"value": "transparent"},
           "clip": {"value": true},
-          "stroke": { "value": "%23999" },
+          "stroke": { "value": "#999" },
           "strokeWidth": { "value": 0 }
         },
         "update": {
@@ -3441,7 +3441,7 @@
         "enter": {
           "fill": {"value": "transparent"},
           "clip": {"value": true},
-          "stroke": { "value": "%23999" },
+          "stroke": { "value": "#999" },
           "strokeWidth": { "value": 0 }
         },
         "update": {
@@ -3840,7 +3840,7 @@
     }
   ]
 };
-    vegaEmbed("%23vis", spec, { actions: false });
+    vegaEmbed("#vis", spec, { actions: false });
   </script>
 </body>
 </html>
